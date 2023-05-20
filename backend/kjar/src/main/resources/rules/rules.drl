@@ -1,0 +1,8 @@
+package rules
+
+rule "proof of concept"
+    when
+        $str: String()
+    then
+        System.out.println("String inserted: " + $str);
+end
