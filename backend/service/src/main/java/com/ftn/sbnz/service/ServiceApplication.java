@@ -19,9 +19,6 @@ public class ServiceApplication {
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kContainer = ks
 		.newKieContainer(ks.newReleaseId("com.ftn.sbnz", "kjar", "0.0.1-SNAPSHOT"));
-		// pazi na stringove u metodi iznad
-		// prvo mora da se poklapa sa paketom, drugo sa nazivom kjar projekta i trece sa verzijom
-		// logicno ali mi nije radilo jer je umesto 'kjar' pisalo 'skjar'
 		KieScanner kScanner = ks.newKieScanner(kContainer);
 		kScanner.start(1000);
 		

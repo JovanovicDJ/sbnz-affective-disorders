@@ -1,7 +1,12 @@
 package com.ftn.sbnz.model;
 
+import org.kie.api.definition.type.Expires;
+import org.kie.api.definition.type.Role;
+
 import java.time.LocalDate;
 
+@Role(Role.Type.EVENT)
+@Expires("60d")
 public class DepressiveEpisode {
     private int id;
     private DepressionType depressionType;

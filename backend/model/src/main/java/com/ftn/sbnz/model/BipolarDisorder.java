@@ -5,14 +5,13 @@ import java.time.LocalDate;
 public class BipolarDisorder {
     private int id;
     private BipolarDisorderType bipolarDisorderType;
-    private int patienId;
+    private int patientId;
     private LocalDate date;
     private int intensitySum;
 
-    public BipolarDisorder(int id, BipolarDisorderType bipolarDisorderType, int patienId, LocalDate date, int intensitySum) {
-        this.id = id;
+    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, int patientId, LocalDate date, int intensitySum) {
         this.bipolarDisorderType = bipolarDisorderType;
-        this.patienId = patienId;
+        this.patientId = patientId;
         this.date = date;
         this.intensitySum = intensitySum;
     }
@@ -33,12 +32,12 @@ public class BipolarDisorder {
         this.bipolarDisorderType = bipolarDisorderType;
     }
 
-    public int getPatienId() {
-        return patienId;
+    public int getPatientId() {
+        return patientId;
     }
 
-    public void setPatienId(int patienId) {
-        this.patienId = patienId;
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 
     public LocalDate getDate() {

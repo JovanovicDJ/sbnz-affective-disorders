@@ -1,12 +1,18 @@
 package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.model.*;
+import org.drools.core.ClockType;
 import org.junit.jupiter.api.Test;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.KieSessionConfiguration;
+import org.kie.api.runtime.conf.ClockTypeOption;
+import org.kie.api.time.SessionPseudoClock;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class AffectiveDisordersTests {
 
@@ -185,6 +191,52 @@ public class AffectiveDisordersTests {
 
         kieSession.insert(symptom1);
         kieSession.insert(symptom2);
+
+        long ruleFireCount = kieSession.fireAllRules();
+        System.out.println(ruleFireCount);
+    }
+
+
+    @Test
+    public void ChooseHighestIntensityTest() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession kieSession = kc.newKieSession("affectivedisorders");
+
+        Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
+                GenderType.FEMALE,"mika@gmail.com","testpass", "0645533665");
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, 0, LocalDate.now(), 78));
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, 0, LocalDate.now(), 85));
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, 0, LocalDate.now(), 65));
+        kieSession.insert(patient);;
+
+        long ruleFireCount = kieSession.fireAllRules();
+        System.out.println(ruleFireCount);
+    }
+
+    @Test
+    public void PseudoClockTest() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSessionConfiguration config = KieServices.Factory.get().newKieSessionConfiguration();
+        //config.setOption(ClockTypeOption.get("pseudo"));
+        config.setOption(ClockTypeOption.get(ClockType.PSEUDO_CLOCK.getId()));
+        //KieSession kieSession = kc.newKieSession(config);
+        KieSession kieSession = kc.newKieSession("affectivedisorders", config);
+        SessionPseudoClock clock = kieSession.getSessionClock();
+        long startTime = System.currentTimeMillis();
+        clock.advanceTime(startTime, TimeUnit.MILLISECONDS);
+
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, 0, LocalDate.now(), 78));
+        System.out.println(new Date(clock.getCurrentTime()));
+        clock.advanceTime(40, TimeUnit.DAYS);
+        kieSession.insert(new ManicEpisode(0, ManiaType.MANIA, 0, LocalDate.now(), 35));
+        System.out.println(new Date(clock.getCurrentTime()));
+
+        Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
+                GenderType.FEMALE,"mika@gmail.com","testpass", "0645533665");
+
+        kieSession.insert(patient);
 
         long ruleFireCount = kieSession.fireAllRules();
         System.out.println(ruleFireCount);
