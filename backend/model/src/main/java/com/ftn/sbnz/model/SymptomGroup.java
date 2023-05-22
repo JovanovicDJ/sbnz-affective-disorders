@@ -1,0 +1,11 @@
+package com.ftn.sbnz.model;
+
+public enum SymptomGroup {
+    MANIC_EPISODE,
+    DEPRESSIVE_EPISODE,
+    DE_WITH_ANXIETY,
+    DE_WITH_MELANCHOLY,
+    DE_WITH_ATYPICAL_FEATURES,
+    DE_WITH_PSYCHOTIC_FEATURES,
+    DE_WITH_PERIPARTUM_ONSET
+}

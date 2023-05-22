@@ -1,8 +1,121 @@
 package rules
 
-rule "proof of concept"
-    when
-        $str: String()
-    then
-        System.out.println("String inserted: " + $str);
+import com.ftn.sbnz.model.SymptomGroup;
+import com.ftn.sbnz.model.Symptom;
+import com.ftn.sbnz.model.Patient;
+import com.ftn.sbnz.model.DepressionEvent;
+import com.ftn.sbnz.model.DepressiveEpisode;
+import com.ftn.sbnz.model.DepressionType;
+import com.ftn.sbnz.model.GenderType;
+
+import java.time.LocalDate;
+
+
+rule "Check shared depression symptoms if intensity is higher then 45 make DepressionEvent"
+when
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "affect", intensity >= 4)
+    $s2 : Symptom(name == "anhedonia", intensity >= 3)
+    $s3 : Symptom(name == "hopelessness", intensity >= 4)
+    $s4 : Symptom(name == "worthlessness", intensity >= 4)
+    $s5 : Symptom(name == "duration", intensity == 5)
+    $total : Number(this > 45) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE),
+        sum($intensity)
+    )
+then
+    insert(new DepressionEvent($id, $total.intValue()));
+end
+
+
+rule "Check if depression is with anxious agitation"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "concentration", symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE, intensity >= 4)
+    $s2 : Symptom(name == "tension", intensity >= 4)
+    $s3 : Symptom(name == "unrest", intensity >= 4)
+    $s4 : Symptom(name == "concern", intensity >= 3)
+    $total : Number(this > 18) from accumulate(
+            Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_ANXIETY),
+            sum($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, $id, LocalDate.now(), $total.intValue() + $de_intensity));
+end
+
+
+rule "Check if depression is with melancholic features"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "disturbed sleep", symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE, intensity >= 3)
+    $s2 : Symptom(name == "disturbed appetite", symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE, intensity >= 3)
+    $s3 : Symptom(name == "loss of interest", intensity >= 3)
+    $s4 : Symptom(name == "emptiness", intensity >= 3)
+    $total : Number(this >= 12) from accumulate(
+                Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_MELANCHOLY),
+                sum($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, $id, LocalDate.now(), $total.intValue() + $de_intensity));
+end
+
+
+rule "Check if depression is with atypical features"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id)
+    $total : Number(this > 12) from accumulate(
+                Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_ATYPICAL_FEATURES),
+                sum($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_ATYPICAL_FEATURES, $id, LocalDate.now(), $total.intValue() + $de_intensity));
+end
+
+
+rule "Check if depression is with psychotic faetures"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id)
+    $total : Number() from accumulate(
+                    Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_PSYCHOTIC_FEATURES),
+                    sum($intensity)
+    )
+    $average : Number(this > 3.8) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_PSYCHOTIC_FEATURES),
+        average($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, $id, LocalDate.now(), $total.intValue() + $de_intensity));
+end
+
+
+rule "Check if depression is with paripartum onset (in pragnancy)"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, gender == GenderType.FEMALE)
+    $s1 : Symptom(name == "in pregnancy", intensity == 5)
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $id, LocalDate.now(), 5));
+end
+
+
+rule "Check if depression is with paripartum onset (after pragnancy)"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, gender == GenderType.FEMALE)
+    $s1 : Symptom(name == "after pregnancy", intensity == 5)
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $id, LocalDate.now(), 5));
+end
+
+
+rule "Depressive episode"
+when
+    $de : DepressiveEpisode($type : depressionType, $intensity : intensitySum)
+then
+    System.out.println($type);
+    System.out.println($intensity);
 end
