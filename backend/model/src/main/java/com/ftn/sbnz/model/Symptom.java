@@ -4,11 +4,13 @@ public class Symptom {
     private String name;
     private int intensity;
     private SymptomGroup symptomGroup;
+    private int patientId;
 
-    public Symptom(String name, int intensity, SymptomGroup symptomGroup) {
+    public Symptom(String name, int intensity, SymptomGroup symptomGroup, int patientId) {
         this.name = name;
         this.intensity = intensity;
         this.symptomGroup = symptomGroup;
+        this.patientId = patientId;
     }
 
     public String getName() {
@@ -33,5 +35,13 @@ public class Symptom {
 
     public void setSymptomGroup(SymptomGroup symptomGroup) {
         this.symptomGroup = symptomGroup;
+    }
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 }

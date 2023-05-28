@@ -13,12 +13,14 @@ public class DepressiveEpisode {
     private int patientId;
     private LocalDate date;
     private int intensitySum;
+    private boolean accepted;
 
-    public DepressiveEpisode(DepressionType depressionType, int patientId, LocalDate date, int intensitySum) {
+    public DepressiveEpisode(DepressionType depressionType, int patientId, LocalDate date, int intensitySum, boolean accepted) {
         this.depressionType = depressionType;
         this.patientId = patientId;
         this.date = date;
         this.intensitySum = intensitySum;
+        this.accepted = accepted;
     }
 
     public int getId() {
@@ -59,5 +61,13 @@ public class DepressiveEpisode {
 
     public void setIntensitySum(int intensitySum) {
         this.intensitySum = intensitySum;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

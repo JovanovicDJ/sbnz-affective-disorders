@@ -13,13 +13,14 @@ public class ManicEpisode {
     private int patientId;
     private LocalDate date;
     private int intensitySum;
+    private boolean accepted;
 
-    public ManicEpisode(int id, ManiaType maniaType, int patientId, LocalDate date, int intensitySum) {
-        this.id = id;
+    public ManicEpisode(ManiaType maniaType, int patientId, LocalDate date, int intensitySum, boolean accepted) {
         this.maniaType = maniaType;
         this.patientId = patientId;
         this.date = date;
         this.intensitySum = intensitySum;
+        this.accepted = accepted;
     }
 
     public int getId() {
@@ -60,5 +61,13 @@ public class ManicEpisode {
 
     public void setIntensitySum(int intensitySum) {
         this.intensitySum = intensitySum;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }
