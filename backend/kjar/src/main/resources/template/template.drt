@@ -23,8 +23,8 @@ rule "Check if the symptoms are consistent with mania"
         $s2 : Symptom(name == "excessive activity", intensity >= @{borderSymptomValue}, patientId == $id)
         $s3 : Symptom(name == "hyperoptimism", intensity >= @{borderSymptomValue}, patientId == $id)
         $s4 : Symptom(name == "duration", intensity > @{borderSymptomValue}, patientId == $id)
-        $total : Number(this >= 52,
-                        this <= 70) from accumulate(
+        $total : Number(this >= @{maniaBorderValue},
+                        this <= @{maxValue}) from accumulate(
                             Symptom($intensity : intensity, symptomGroup == SymptomGroup.MANIC_EPISODE, patientId == $id),
                             sum($intensity)
             )
@@ -40,8 +40,8 @@ rule "Check if the symptoms are consistent with hypomania"
         $s2 : Symptom(name == "excessive activity", intensity > @{minSymptomValue}, patientId == $id)
         $s3 : Symptom(name == "hyperoptimism", intensity > @{minSymptomValue}, patientId == $id)
         $s4 : Symptom(name == "duration", intensity > @{borderSymptomValue}, patientId == $id)
-        $total : Number(this >= 42,
-                        this < 52) from accumulate(
+        $total : Number(this >= @{hypomaniaBorderValue},
+                        this < @{maniaBorderValue}) from accumulate(
                             Symptom($intensity : intensity, symptomGroup == SymptomGroup.MANIC_EPISODE, patientId == $id),
                             sum($intensity)
             )

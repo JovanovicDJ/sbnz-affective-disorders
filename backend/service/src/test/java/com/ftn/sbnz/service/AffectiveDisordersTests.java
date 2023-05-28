@@ -280,7 +280,7 @@ public class AffectiveDisordersTests {
         InputStream template = AffectiveDisordersTests.class.getResourceAsStream("/template/template.drt");
 
         DataProvider dataProvider = new ArrayDataProvider(new String[][]{
-            new String[]{"3", "4", "42", "50", "70"}
+            new String[]{"3", "4", "42", "52", "70"}
         });
 
         DataProviderCompiler converter = new DataProviderCompiler();
