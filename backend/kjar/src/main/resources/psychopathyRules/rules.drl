@@ -1,0 +1,127 @@
+package psychopathyRules
+
+import com.ftn.sbnz.model.SymptomGroup;
+import com.ftn.sbnz.model.Symptom;
+import com.ftn.sbnz.model.Patient;
+import com.ftn.sbnz.model2.AffectiveFactor;
+import com.ftn.sbnz.model2.AntisocialFactor;
+import com.ftn.sbnz.model2.InterpersonalAffectiveFactor;
+import com.ftn.sbnz.model2.InterpersonalFactor;
+import com.ftn.sbnz.model2.LifestyleFactor;
+import com.ftn.sbnz.model2.Psychopathy;
+import com.ftn.sbnz.model2.SocialDeviance;
+
+import java.time.LocalDate;
+
+global Boolean maxRuleExecuted;
+
+rule "symptom"
+when
+    $sy : Symptom()
+then
+    System.out.print($sy.toString());
+end
+
+rule "Check  interpersonal symptoms if intensity is higher then 12 make InterpersonalFactor"
+when
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "grandiosity", intensity >= 4, patientId == $id)
+    $s2 : Symptom(name == "pathological lying", intensity >= 3, patientId == $id)
+    $s3 : Symptom(name == "manipulativeness", intensity >= 4, patientId == $id)
+    $s4 : Symptom(name == "artificial charm", intensity >= 4, patientId == $id)
+    $total : Number(this > 12 ) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.INTERPERSONAL_FACTOR, patientId == $id),
+        sum($intensity)
+    )
+then
+    insert(new InterpersonalFactor($id, LocalDate.now(),$total.intValue()));
+end
+
+
+rule "Check  affective symptoms if intensity is higher then 18 make AffectiveFactor"
+when
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "limited affect", intensity >= 4, patientId == $id)
+    $s2 : Symptom(name == "no empathy", intensity >= 3, patientId == $id)
+    $s3 : Symptom(name == "no responsibility", intensity >= 4, patientId == $id)
+    $s4 : Symptom(name == "no remorse", intensity >= 3, patientId == $id)
+    $s5 : Symptom(name == " no guilt", intensity >= 3, patientId == $id)
+    $total : Number(this > 18 ) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.AFFECTIVE_FACTOR, patientId == $id),
+        sum($intensity)
+    )
+then
+    insert(new AffectiveFactor($id, LocalDate.now() ,$total.intValue()));
+end
+
+rule "Check  lifestyle symptoms if intensity is higher then 23 make LifestyleFactor"
+when
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "need for stimulation", intensity >= 4, patientId == $id)
+    $s2 : Symptom(name == "parasitic lifesytle", intensity >= 3, patientId == $id)
+    $s3 : Symptom(name == "no long-term goals", intensity >= 4, patientId == $id)
+    $s4 : Symptom(name == "no ambition", intensity >= 3, patientId == $id)
+    $s5 : Symptom(name == "impulsiveness", intensity >= 3, patientId == $id)
+    $s6 : Symptom(name == "irresponsibility", intensity >= 3, patientId == $id)
+    $total : Number(this > 23) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.LIFESTYLE_FACTOR, patientId == $id),
+        sum($intensity)
+    )
+then
+    insert(new LifestyleFactor($id, LocalDate.now() ,$total.intValue()));
+end
+
+rule "Check  antisocial symptoms if intensity is higher then 14 make AntisocialFactor"
+when
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "weak control", intensity >= 4, patientId == $id)
+    $s2 : Symptom(name == "early behavior problems", intensity >= 3, patientId == $id)
+    $s3 : Symptom(name == "juvenile delinquency", intensity >= 4, patientId == $id)
+    $s4 : Symptom(name == "criminal diversity", intensity  >= 3, patientId == $id)
+    $total : Number(this > 14) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.ANTISOCIAL_FACTOR, patientId == $id),
+        sum($intensity)
+    )
+then
+    insert(new AntisocialFactor($id, LocalDate.now() ,$total.intValue()));
+end
+
+rule "all antisocial factors"
+when
+    $lsf : AntisocialFactor()
+then
+    System.out.println($lsf.toString());
+end
+
+
+rule "Check if interpersonal factor and affective factor overlap over time window of 2 months"
+when
+    $patient : Patient($id : id)
+    $ipf : InterpersonalFactor(patientId == $id, $ipf_intensity: intensitySum)
+    $aff : AffectiveFactor(patientId == $id , $aff_intensity: intensitySum)
+    over window : time(60d)
+then
+    insert(new InterpersonalAffectiveFactor($id, LocalDate.now(), $ipf_intensity + $aff_intensity ) );
+end
+
+rule "Check if lifestyle factor and antisocial factor overlap over time window of 2 months"
+when
+    $patient : Patient($id : id)
+    $lsf : LifestyleFactor(patientId == $id, $lsf_intensity: intensitySum)
+    $asf : AntisocialFactor(patientId == $id , $asf_intensity: intensitySum)
+    over window : time(60d)
+then
+    insert(new SocialDeviance($id, LocalDate.now(), $lsf_intensity + $asf_intensity ) );
+end
+
+
+rule "Check if social deviance and interpersonal affect factor overlap over time window of 1 year"
+when
+    $patient : Patient($id : id)
+    $scd : SocialDeviance(patientId == $id, $scd_intensity: intensitySum)
+    $iaf : InterpersonalAffectiveFactor(patientId == $id , $iaf_intensity: intensitySum)
+    over window : time(60d)
+then
+    insert(new InterpersonalAffectiveFactor($id, LocalDate.now(), $scd_intensity + $iaf_intensity ) );
+end
+

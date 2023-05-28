@@ -2,4 +2,7 @@
     <kbase eventProcessingMode="stream" name="kbase" packages="rules">
         <ksession name="affectivedisorders" clockType="pseudo"/>
     </kbase>
+    <kbase eventProcessingMode="stream" name="kbase2" packages="psychopathyRules">
+        <ksession name="psychopathydisorder" clockType="pseudo"/>
+    </kbase>
 </kmodule>

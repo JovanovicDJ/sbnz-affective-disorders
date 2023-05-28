@@ -44,4 +44,14 @@ public class Symptom {
     public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
+
+    @Override
+    public String toString() {
+        return "Symptom{" +
+                "name='" + name + '\'' +
+                ", intensity=" + intensity +
+                ", symptomGroup=" + symptomGroup +
+                ", patientId=" + patientId +
+                '}';
+    }
 }
