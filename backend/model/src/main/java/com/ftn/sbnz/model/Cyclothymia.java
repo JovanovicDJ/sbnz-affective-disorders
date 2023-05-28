@@ -8,8 +8,7 @@ public class Cyclothymia {
     private LocalDate date;
     private int intensitySum;
 
-    public Cyclothymia(int id, int patientId, LocalDate date, int intensitySum) {
-        this.id = id;
+    public Cyclothymia(int patientId, LocalDate date, int intensitySum) {
         this.patientId = patientId;
         this.date = date;
         this.intensitySum = intensitySum;

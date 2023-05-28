@@ -10,8 +10,14 @@ import com.ftn.sbnz.model.DepressionType;
 import com.ftn.sbnz.model.GenderType;
 import com.ftn.sbnz.model.BipolarDisorderType;
 import com.ftn.sbnz.model.BipolarDisorder;
+import com.ftn.sbnz.model.Cyclothymia;
+import com.ftn.sbnz.helpUtil.ValidationUtils;
 
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 global Boolean maxRuleExecuted;
 
@@ -224,4 +230,79 @@ when
     $bd : BipolarDisorder()
 then
     System.out.println("Bipolar Disorder: " + $bd.getBipolarDisorderType());
+end
+
+rule "Look for bipolar disorders for last 2y and check period between those is no more than 2m , and create Cyclothymia, old persons"
+when
+    $patient : Patient($id : id, dob < LocalDate.now().minusYears(18))
+    $bdsList : List(size > 1) from collect(
+        BipolarDisorder(
+            patientId == $id,
+            $executionTime : executionTime
+        )
+        over window:time(730d) // Prozor od 2 godine
+    )
+    eval(
+        ValidationUtils.validateCyclothymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySum($bdsList);
+    insert(new Cyclothymia($id, LocalDate.now(), intensitySum));
+end
+
+rule "Look for bipolar disorders for last 1y and check period between those is no more than 2m , and create Cyclothymia, young persons"
+when
+    $patient : Patient($id : id, dob > LocalDate.now().minusYears(18))
+    $bdsList : List(size > 1) from collect(
+        BipolarDisorder(
+            patientId == $id,
+            $executionTime : executionTime
+        )
+        over window:time(365d) // Prozor od 1 godine
+    )
+    eval(
+        ValidationUtils.validateCyclothymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySum($bdsList);
+    insert(new Cyclothymia($id, LocalDate.now(), intensitySum));
+end
+
+
+rule "cyc"
+when
+    $c : Cyclothymia()
+then
+    System.out.println("ide gas evo je!\n");
+end
+
+
+rule "Look for depression episodes for last 2y and check period between those is no more than 2m , and create Cyclothymia, old persons"
+when
+    $patient : Patient($id : id, dob < LocalDate.now().minusYears(18))
+    $bdsList : List(size > 1) from collect(
+        DepressiveEpisode( patientId == $id )
+        over window:time(730d) // Prozor od 2 godine
+    )
+    eval(
+        ValidationUtils.validateDysthymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySumDysthymia($bdsList);
+    insert(new Dysthymia($id, LocalDate.now(), intensitySum));
+end
+
+rule "Look for depression episodes for last 1y and check period between those is no more than 2m , and create Cyclothymia, young persons"
+when
+    $patient : Patient($id : id, dob > LocalDate.now().minusYears(18))
+    $bdsList : List(size > 1) from collect(
+        DepressiveEpisode( patientId == $id )
+        over window:time(365d) // Prozor od 2 godine
+    )
+    eval(
+        ValidationUtils.validateDysthymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySumDysthymia($bdsList);
+    insert(new Dysthymia($id, LocalDate.now(), intensitySum));
 end

@@ -4,7 +4,8 @@ import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Role(Role.Type.EVENT)
 @Timestamp("executionTime")
@@ -13,14 +14,22 @@ public class BipolarDisorder {
     private int id;
     private BipolarDisorderType bipolarDisorderType;
     private int patientId;
-    private Date executionTime;
+    private LocalDate executionTime;
     private int intensitySum;
     private boolean accepted;
 
     public BipolarDisorder(BipolarDisorderType bipolarDisorderType, int patientId, int intensitySum, boolean accepted) {
         this.bipolarDisorderType = bipolarDisorderType;
         this.patientId = patientId;
-        this.executionTime = new Date();
+        this.executionTime = LocalDate.now();
+        this.intensitySum = intensitySum;
+        this.accepted = accepted;
+    }
+
+    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, int patientId, LocalDate executionTime, int intensitySum, boolean accepted) {
+        this.bipolarDisorderType = bipolarDisorderType;
+        this.patientId = patientId;
+        this.executionTime = executionTime;
         this.intensitySum = intensitySum;
         this.accepted = accepted;
     }
@@ -49,11 +58,11 @@ public class BipolarDisorder {
         this.patientId = patientId;
     }
 
-    public Date getExecutionTime() {
+    public LocalDate getExecutionTime() {
         return executionTime;
     }
 
-    public void setExecutionTime(Date executionTime) {
+    public void setExecutionTime(LocalDate executionTime) {
         this.executionTime = executionTime;
     }
 
