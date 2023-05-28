@@ -1,18 +1,26 @@
 package com.ftn.sbnz.model;
 
-import java.time.LocalDate;
+import org.kie.api.definition.type.Expires;
+import org.kie.api.definition.type.Role;
+import org.kie.api.definition.type.Timestamp;
 
+import java.util.Date;
+
+@Role(Role.Type.EVENT)
+@Timestamp("executionTime")
+@Expires("60d")
 public class RecurrentDepressiveDisorder {
     private int id;
     private int patientId;
-    private LocalDate date;
+    private Date executionTime;
     private int intensitySum;
+    private boolean accepted;
 
-    public RecurrentDepressiveDisorder(int id, int patientId, LocalDate date, int intensitySum) {
-        this.id = id;
+    public RecurrentDepressiveDisorder(int patientId, int intensitySum, boolean accepted) {
         this.patientId = patientId;
-        this.date = date;
+        this.executionTime = new Date();
         this.intensitySum = intensitySum;
+        this.accepted = accepted;
     }
 
     public int getId() {
@@ -31,12 +39,12 @@ public class RecurrentDepressiveDisorder {
         this.patientId = patientId;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public Date getExecutionTime() {
+        return executionTime;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setExecutionTime(Date executionTime) {
+        this.executionTime = executionTime;
     }
 
     public int getIntensitySum() {
@@ -45,5 +53,13 @@ public class RecurrentDepressiveDisorder {
 
     public void setIntensitySum(int intensitySum) {
         this.intensitySum = intensitySum;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

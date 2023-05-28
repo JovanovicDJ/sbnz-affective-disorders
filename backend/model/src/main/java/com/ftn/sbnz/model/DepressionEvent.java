@@ -7,7 +7,7 @@ import org.kie.api.definition.type.Timestamp;
 import java.util.Date;
 
 @Role(Role.Type.EVENT)
-@Expires("3h30m")
+@Expires("30m")
 public class DepressionEvent {
     private int patientId;
     private int intensity;

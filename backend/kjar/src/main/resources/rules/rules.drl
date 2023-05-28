@@ -45,7 +45,7 @@ when
             sum($intensity)
     )
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, $id, LocalDate.now(), $total.intValue() + $de_intensity, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, $id, $total.intValue() + $de_intensity, false));
 end
 
 
@@ -62,7 +62,7 @@ when
                 sum($intensity)
     )
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, $id, LocalDate.now(), $total.intValue() + $de_intensity, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, $id, $total.intValue() + $de_intensity, false));
 end
 
 
@@ -75,7 +75,7 @@ when
                 sum($intensity)
     )
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_ATYPICAL_FEATURES, $id, LocalDate.now(), $total.intValue() + $de_intensity, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_ATYPICAL_FEATURES, $id, $total.intValue() + $de_intensity, false));
 end
 
 
@@ -92,7 +92,7 @@ when
         average($intensity)
     )
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, $id, LocalDate.now(), $total.intValue() + $de_intensity, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, $id, $total.intValue() + $de_intensity, false));
 end
 
 
@@ -102,7 +102,7 @@ when
     $patient : Patient($id : id, gender == GenderType.FEMALE)
     $s1 : Symptom(name == "in pregnancy", intensity == 5, patientId == $id)
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $id, LocalDate.now(), 5, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $id, 5, false));
 end
 
 
@@ -112,7 +112,7 @@ when
     $patient : Patient($id : id, gender == GenderType.FEMALE)
     $s1 : Symptom(name == "after pregnancy", intensity == 5, patientId == $id)
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $id, LocalDate.now(), 5, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $id, 5, false));
 end
 
 
@@ -131,7 +131,6 @@ rule "Accepted depressive episode"
 when
     $de : DepressiveEpisode(accepted == true)
 then
-    System.out.println("*****************");
     System.out.println(maxRuleExecuted);
     System.out.println($de.getDepressionType());
     System.out.println($de.getIntensitySum());
@@ -155,7 +154,7 @@ when
     $me : ManicEpisode($mania_intensity : intensitySum)
     over window : time(60d)
 then
-    insert(new BipolarDisorder(BipolarDisorderType.WITH_ANXIETY, $id, LocalDate.now(), $depression_intensity + $mania_intensity));
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_ANXIETY, $id, $depression_intensity + $mania_intensity, false));
 end
 
 
@@ -166,7 +165,7 @@ when
     $me : ManicEpisode($mania_intensity : intensitySum)
     over window : time(60d)
 then
-    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $id, LocalDate.now(), $depression_intensity + $mania_intensity));
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $id, $depression_intensity + $mania_intensity, false));
 end
 
 
@@ -177,7 +176,7 @@ when
     $me : ManicEpisode($mania_intensity : intensitySum)
     over window : time(60d)
 then
-    insert(new BipolarDisorder(BipolarDisorderType.WITH_ATYPICAL_FEATURES, $id, LocalDate.now(), $depression_intensity + $mania_intensity));
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_ATYPICAL_FEATURES, $id, $depression_intensity + $mania_intensity, false));
 end
 
 
@@ -188,7 +187,7 @@ when
     $me : ManicEpisode($mania_intensity : intensitySum)
     over window : time(60d)
 then
-    insert(new BipolarDisorder(BipolarDisorderType.WITH_PSYCHOTIC_FEATURES, $id, LocalDate.now(), $depression_intensity + $mania_intensity));
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_PSYCHOTIC_FEATURES, $id, $depression_intensity + $mania_intensity, false));
 end
 
 
@@ -199,7 +198,7 @@ when
     $me : ManicEpisode($mania_intensity : intensitySum)
     over window : time(60d)
 then
-    insert(new BipolarDisorder(BipolarDisorderType.WITH_PERIPARTUM_ONSET, $id, LocalDate.now(), $depression_intensity + $mania_intensity));
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_PERIPARTUM_ONSET, $id, $depression_intensity + $mania_intensity, false));
 end
 
 rule "Check if Manic Episode and Depressive Episode overlap over duration of 2 months"

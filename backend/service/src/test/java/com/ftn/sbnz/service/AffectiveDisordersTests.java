@@ -232,9 +232,9 @@ public class AffectiveDisordersTests {
 
         Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
                 GenderType.FEMALE,"mika@gmail.com","testpass", "0645533665");
-        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, 0, LocalDate.now(), 78, false));
-        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, 0, LocalDate.now(), 85, false));
-        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, 0, LocalDate.now(), 65, false));
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, 0, 78, false));
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, 0, 85, false));
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, 0, 65, false));
         kieSession.insert(patient);;
 
         kieSession.setGlobal("maxRuleExecuted", false);
@@ -257,10 +257,10 @@ public class AffectiveDisordersTests {
         long startTime = System.currentTimeMillis();
         clock.advanceTime(startTime, TimeUnit.MILLISECONDS);
 
-        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, 0, LocalDate.now(), 78, false));
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, 0, 78, false));
         System.out.println(new Date(clock.getCurrentTime()));
         clock.advanceTime(40, TimeUnit.DAYS);
-        kieSession.insert(new ManicEpisode(ManiaType.MANIA, 0, LocalDate.now(), 35, true));
+        kieSession.insert(new ManicEpisode(ManiaType.MANIA, 0, 35, true));
         System.out.println(new Date(clock.getCurrentTime()));
 
         Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
