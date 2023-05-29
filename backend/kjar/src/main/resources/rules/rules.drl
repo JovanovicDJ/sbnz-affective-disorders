@@ -7,10 +7,13 @@ import com.ftn.sbnz.model.DepressionEvent;
 import com.ftn.sbnz.model.DepressiveEpisode;
 import com.ftn.sbnz.model.ManicEpisode;
 import com.ftn.sbnz.model.DepressionType;
+import com.ftn.sbnz.model.ManiaType;
 import com.ftn.sbnz.model.GenderType;
 import com.ftn.sbnz.model.BipolarDisorderType;
 import com.ftn.sbnz.model.BipolarDisorder;
 import com.ftn.sbnz.model.Cyclothymia;
+import com.ftn.sbnz.model.Dysthymia;
+import com.ftn.sbnz.model.RecurrentDepressiveDisorder;
 import com.ftn.sbnz.helpUtil.ValidationUtils;
 
 import java.time.temporal.ChronoUnit;
@@ -207,6 +210,74 @@ then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_PERIPARTUM_ONSET, $id, $depression_intensity + $mania_intensity, false));
 end
 
+
+rule "Check if there are conditions for bipolar disorder with quick change (with manias)"
+when
+    $patient : Patient($id : id)
+    $depression_intensity : Number() from accumulate(
+        DepressiveEpisode($intensity : intensitySum, patientId == $id),
+        sum($intensity)
+    )
+    $beList : List(size > 2) from collect(
+        DepressiveEpisode(patientId == $id)
+    )
+    $mania_intensity : Number() from accumulate(
+        ManicEpisode($intensity : intensitySum, patientId == $id),
+        sum($intensity)
+    )
+    $meList : List(size > 2) from collect(
+        ManicEpisode(patientId == $id, maniaType == ManiaType.MANIA)
+    )
+    over window : time(365d)
+then
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $id,
+                               $depression_intensity + $mania_intensity, true));
+end
+
+
+rule "Check if there are conditions for bipolar disorder with quick change (mania/hypomania)"
+when
+    $patient : Patient($id : id)
+    $depression_intensity : Number() from accumulate(
+        DepressiveEpisode($intensity : intensitySum, patientId == $id),
+        sum($intensity)
+    )
+    $beList : List(size > 2) from collect(
+        DepressiveEpisode(patientId == $id)
+    )
+    $me : ManicEpisode(patientId == $id, maniaType == ManiaType.MANIA, $mania_intensity : intensitySum)
+    $hme : ManicEpisode(patientId == $id, maniaType == ManiaType.HYPOMANIA, $hypomania_intensity : intensitySum)
+    over window : time(365d)
+then
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $id,
+                               $depression_intensity + $mania_intensity + $hypomania_intensity, true));
+end
+
+
+rule "Check if there are conditions for bipolar disorder with quick change (with hypomanias)"
+when
+    $patient : Patient($id : id)
+    $depression_intensity : Number() from accumulate(
+        DepressiveEpisode($intensity : intensitySum, patientId == $id),
+        sum($intensity)
+    )
+    $beList : List(size > 2) from collect(
+        DepressiveEpisode(patientId == $id)
+    )
+    $hypomania_intensity : Number() from accumulate(
+        ManicEpisode($intensity : intensitySum, patientId == $id),
+        sum($intensity)
+    )
+    $meList : List(size > 2) from collect(
+        ManicEpisode(patientId == $id, maniaType == ManiaType.HYPOMANIA)
+    )
+    over window : time(365d)
+then
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $id,
+                               $depression_intensity + $hypomania_intensity, true));
+end
+
+
 rule "Check if Manic Episode and Depressive Episode overlap over duration of 2 months"
 when
     $de : DepressiveEpisode()
@@ -297,7 +368,7 @@ when
     $patient : Patient($id : id, dob > LocalDate.now().minusYears(18))
     $bdsList : List(size > 1) from collect(
         DepressiveEpisode( patientId == $id )
-        over window:time(365d) // Prozor od 2 godine
+        over window:time(365d)
     )
     eval(
         ValidationUtils.validateDysthymia($bdsList)
@@ -305,4 +376,35 @@ when
 then
     int intensitySum = ValidationUtils.calculateIntensitySumDysthymia($bdsList);
     insert(new Dysthymia($id, LocalDate.now(), intensitySum));
+end
+
+
+rule "Check for recurrent depressive disorder, at least two episodes of depression in three months"
+when
+    $patient : Patient($id : id)
+    $bdsList : List(size > 2) from collect(
+        DepressiveEpisode( patientId == $id )
+        over window:time(93d)
+    )
+    eval(
+        ValidationUtils.validateRecurrentDepressiveDisorder($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calcIntensityRecurrentDisorder($bdsList);
+    insert(new RecurrentDepressiveDisorder($id, intensitySum, true));
+end
+
+
+rule "Change the diagnosis if manic episode happens in two months after reccurent depressive disorder"
+when
+    $patient : Patient($id : id)
+    $rdd : RecurrentDepressiveDisorder(patientId == $id, $rdd_intensity : intensitySum)
+    $me : ManicEpisode(patientId == $id, $me_intensity : intensitySum)
+    eval(
+        ValidationUtils.validateDiagnosisChange($rdd, $me)
+    )
+then
+    delete($rdd);
+    delete($me);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $id, $rdd_intensity + $me_intensity, true));
 end
