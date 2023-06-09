@@ -10,6 +10,9 @@ import { SharedModule } from './shared/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MaterialModule } from './shared/material/material.module';
+import { MatSliderModule } from '@angular/material/slider';
+import { PsyhopatyModule } from './psyhopaty/psyhopaty.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
+    PsyhopatyModule
   ],
   providers: [],
   bootstrap: [AppComponent]

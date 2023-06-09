@@ -1,0 +1,68 @@
+<form [formGroup]="form">
+    <div class="headline">
+        <span>TEST za PSIHOPATIJU</span>
+    </div>
+    <div class="question">
+        <hr/>
+        <div class="question-text">
+            Procena koliko su pacijentovi međuljudski odnosi loši: 
+        </div>
+        <div class="slider">
+            <div class="values">
+                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
+            </div>
+            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="INTERPERSONAL_FACTOR">
+                <input matSliderThumb >
+            </mat-slider>       
+        </div>
+        <hr/>
+    </div>
+    <div class="question">
+        <hr/>
+        <div class="question-text">
+            Procena koliko pacijent ima negativnog afekta: 
+        </div>
+        <div class="slider">
+            <div class="values">
+                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
+            </div>
+            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="AFFECTIVE_FACTOR">
+                <input matSliderThumb >
+            </mat-slider>       
+        </div>
+        <hr/>
+    </div>
+    <div class="question">
+        <hr/>
+        <div class="question-text">
+            Procena koliko pacijent ima negativan način života: 
+        </div>
+        <div class="slider">
+            <div class="values">
+                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
+            </div>
+            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="LIFESTYLE_FACTOR">
+                <input matSliderThumb >
+            </mat-slider>       
+        </div>
+        <hr/>
+    </div>
+    <div class="question">
+        <hr/>
+        <div class="question-text">
+            Procena koliko je pacijent asocijalan: 
+        </div>
+        <div class="slider">
+            <div class="values">
+                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
+            </div>
+            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="ANTISOCIAL_FACTOR">
+                <input matSliderThumb >
+            </mat-slider>       
+        </div>
+        <hr/>
+    </div>
+    <div class="save-command">
+        <button mat-raised-button  color="primary" (click)="submit()">Sacuvaj odgovore</button>
+    </div>
+</form>
