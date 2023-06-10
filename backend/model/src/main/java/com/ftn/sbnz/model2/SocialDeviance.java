@@ -1,37 +1,54 @@
 package com.ftn.sbnz.model2;
 
+import com.ftn.sbnz.model.Patient;
 import org.kie.api.definition.type.Role;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+
+@Entity
+@Table(name = "social_deviances")
 @Role(Role.Type.EVENT)
 public class SocialDeviance {
-    private int id;
-    private int patientId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sd_id", nullable = false)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "patient")
+    private Patient patient;
+
+    @Column(name = "date", nullable = false)
     private LocalDate date;
+
+    @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
-    public SocialDeviance( int patientId, LocalDate date, int intensitySum) {
+    public SocialDeviance() { }
 
-        this.patientId = patientId;
+    public SocialDeviance(Patient patient, LocalDate date, int intensitySum) {
+        this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public LocalDate getDate() {

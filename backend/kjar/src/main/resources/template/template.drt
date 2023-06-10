@@ -29,7 +29,7 @@ rule "Check if the symptoms are consistent with mania"
                             sum($intensity)
             )
     then
-        insert(new ManicEpisode(ManiaType.MANIA, $id, $total.intValue(), true));
+        insert(new ManicEpisode(ManiaType.MANIA, $patient, $total.intValue(), true));
 end
 
 
@@ -46,7 +46,7 @@ rule "Check if the symptoms are consistent with hypomania"
                             sum($intensity)
             )
     then
-        insert(new ManicEpisode(ManiaType.HYPOMANIA, $id, $total.intValue(), true));
+        insert(new ManicEpisode(ManiaType.HYPOMANIA, $patient, $total.intValue(), true));
 end
 
 end template

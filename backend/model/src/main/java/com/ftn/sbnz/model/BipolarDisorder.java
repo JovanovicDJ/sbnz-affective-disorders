@@ -4,41 +4,72 @@ import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
+@Entity
+@Table(name = "dipolar_disorders")
 @Role(Role.Type.EVENT)
 @Timestamp("executionTime")
 @Expires("60d")
 public class BipolarDisorder {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bd_id", nullable = false)
+    private Long id;
+
+    @Column(name = "type",nullable = false)
     private BipolarDisorderType bipolarDisorderType;
-    private int patientId;
+
+    @ManyToOne
+    @JoinColumn(name = "patient")
+    private Patient patient;
+
+    @Column(name = "execution_time",nullable = false)
     private LocalDate executionTime;
+
+    @Column(name = "intensity",nullable = false)
     private int intensitySum;
+
+    @Column(name = "accepted",nullable = false)
     private boolean accepted;
 
-    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, int patientId, int intensitySum, boolean accepted) {
-        this.bipolarDisorderType = bipolarDisorderType;
-        this.patientId = patientId;
-        this.executionTime = LocalDate.now();
-        this.intensitySum = intensitySum;
-        this.accepted = accepted;
-    }
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted;
 
-    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, int patientId, LocalDate executionTime, int intensitySum, boolean accepted) {
+    public BipolarDisorder() { }
+
+    public BipolarDisorder(Long id, BipolarDisorderType bipolarDisorderType, Patient patient, LocalDate executionTime, int intensitySum, boolean accepted) {
+        this.id = id;
         this.bipolarDisorderType = bipolarDisorderType;
-        this.patientId = patientId;
+        this.patient = patient;
         this.executionTime = executionTime;
         this.intensitySum = intensitySum;
         this.accepted = accepted;
     }
 
-    public int getId() {
+    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, Patient patient, int intensitySum, boolean accepted) {
+        this.bipolarDisorderType = bipolarDisorderType;
+        this.patient = patient;
+        this.executionTime = LocalDate.now();
+        this.intensitySum = intensitySum;
+        this.accepted = accepted;
+    }
+
+    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, Patient patient, LocalDate executionTime, int intensitySum, boolean accepted) {
+        this.bipolarDisorderType = bipolarDisorderType;
+        this.patient = patient;
+        this.executionTime = executionTime;
+        this.intensitySum = intensitySum;
+        this.accepted = accepted;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -50,12 +81,12 @@ public class BipolarDisorder {
         this.bipolarDisorderType = bipolarDisorderType;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public LocalDate getExecutionTime() {
@@ -80,5 +111,13 @@ public class BipolarDisorder {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

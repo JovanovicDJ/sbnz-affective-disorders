@@ -1,33 +1,51 @@
 package com.ftn.sbnz.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "patients")
 public class Patient {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_id", nullable = false)
+    private Long id;
+
+    @Column(name ="name",nullable = false)
     private String name;
+
+    @Column(name ="surname",nullable = false)
     private String surname;
+
+    @Column(name ="dob",nullable = false)
     private LocalDate dob;
+
+    @Column(name ="gender",nullable = false)
     private GenderType gender;
+
+    @Column(name ="email",nullable = false)
     private String email;
-    private String password;
+
+    @Column(name ="phone",nullable = false)
     private String phoneNum;
 
-    public Patient(int id, String name, String surname, LocalDate dob, GenderType gender, String email, String password, String phoneNum) {
+    public Patient() { }
+
+    public Patient(long id, String name, String surname, LocalDate dob, GenderType gender, String email, String phoneNum) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.dob = dob;
         this.gender = gender;
         this.email = email;
-        this.password = password;
         this.phoneNum = phoneNum;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,14 +87,6 @@ public class Patient {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhoneNum() {
