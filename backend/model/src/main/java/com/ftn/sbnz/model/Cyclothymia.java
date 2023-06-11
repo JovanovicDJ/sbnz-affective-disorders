@@ -1,33 +1,51 @@
 package com.ftn.sbnz.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "cyclothymias")
 public class Cyclothymia {
-    private int id;
-    private int patientId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "c_id", nullable = false)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "patient")
+    private Patient patient;
+
+    @Column(name = "date", nullable = false)
     private LocalDate date;
+
+    @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
-    public Cyclothymia(int patientId, LocalDate date, int intensitySum) {
-        this.patientId = patientId;
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    public Cyclothymia() { }
+
+    public Cyclothymia(Patient patient, LocalDate date, int intensitySum) {
+        this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public LocalDate getDate() {
@@ -44,5 +62,13 @@ public class Cyclothymia {
 
     public void setIntensitySum(int intensitySum) {
         this.intensitySum = intensitySum;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

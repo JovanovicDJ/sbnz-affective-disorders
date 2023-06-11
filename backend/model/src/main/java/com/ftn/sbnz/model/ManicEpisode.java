@@ -4,32 +4,55 @@ import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "manic_episodes")
 @Role(Role.Type.EVENT)
 @Timestamp("executionTime")
 @Expires("60d")
 public class ManicEpisode {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "me_id", nullable = false)
+    private Long id;
+
+    @Column(name = "type", nullable = false)
     private ManiaType maniaType;
-    private int patientId;
+
+    @ManyToOne
+    @JoinColumn(name = "patient")
+    private Patient patient;
+
+    @Column(name ="execution_time",nullable = false)
     private Date executionTime;
+
+    @Column(name ="intensity",nullable = false)
     private int intensitySum;
+
+    @Column(name ="accepted",nullable = false)
     private boolean accepted;
 
-    public ManicEpisode(ManiaType maniaType, int patientId, int intensitySum, boolean accepted) {
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    public ManicEpisode() { }
+
+    public ManicEpisode(ManiaType maniaType, Patient patient, int intensitySum, boolean accepted) {
         this.maniaType = maniaType;
-        this.patientId = patientId;
+        this.patient = patient;
         this.executionTime = new Date();
         this.intensitySum = intensitySum;
         this.accepted = accepted;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -41,12 +64,12 @@ public class ManicEpisode {
         this.maniaType = maniaType;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public Date getExecutionTime() {
@@ -71,5 +94,13 @@ public class ManicEpisode {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

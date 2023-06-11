@@ -1,34 +1,51 @@
 package com.ftn.sbnz.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "dysthymias")
 public class Dysthymia {
-    private int id;
-    private int patinetId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "d_id", nullable = false)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "patient")
+    private Patient patient;
+
+    @Column(name = "date", nullable = false)
     private LocalDate date;
+
+    @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
-    public Dysthymia(int id, int patinetId, LocalDate date, int intensitySum) {
-        this.id = id;
-        this.patinetId = patinetId;
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    public Dysthymia() { }
+
+    public Dysthymia(Patient patient, LocalDate date, int intensitySum) {
+        this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getPatinetId() {
-        return patinetId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatinetId(int patinetId) {
-        this.patinetId = patinetId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public LocalDate getDate() {
@@ -45,5 +62,13 @@ public class Dysthymia {
 
     public void setIntensitySum(int intensitySum) {
         this.intensitySum = intensitySum;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

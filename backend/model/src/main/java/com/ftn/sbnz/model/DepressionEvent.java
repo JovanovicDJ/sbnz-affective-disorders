@@ -9,21 +9,21 @@ import java.util.Date;
 @Role(Role.Type.EVENT)
 @Expires("30m")
 public class DepressionEvent {
-    private int patientId;
+    private Patient patient;
     private int intensity;
 
-    public DepressionEvent(int patientId, int intensity) {
-        this.patientId = patientId;
+    public DepressionEvent(Patient patient, int intensity) {
+        this.patient = patient;
         this.intensity = intensity;
     }
 
 
-    public int getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public int getIntensity() {
