@@ -1,45 +1,24 @@
-package com.ftn.sbnz.model;
+package com.ftn.sbnz.service.dto;
 
-import javax.persistence.*;
+import com.ftn.sbnz.model.Gender;
+
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "patients")
-public class Patient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "patient_id", nullable = false)
+public class PatientDTO {
+
     private Long id;
 
-    @Column(name ="name",nullable = false)
     private String name;
 
-    @Column(name ="surname",nullable = false)
     private String surname;
 
-    @Column(name ="dob",nullable = false)
     private LocalDate dob;
 
-    @Column(name ="gender",nullable = false)
     private Gender gender;
 
-    @Column(name ="email",nullable = false)
     private String email;
 
-    @Column(name ="phone",nullable = false)
     private String phoneNum;
-
-    public Patient() { }
-
-    public Patient(long id, String name, String surname, LocalDate dob, Gender gender, String email, String phoneNum) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.dob = dob;
-        this.gender = gender;
-        this.email = email;
-        this.phoneNum = phoneNum;
-    }
 
     public Long getId() {
         return id;

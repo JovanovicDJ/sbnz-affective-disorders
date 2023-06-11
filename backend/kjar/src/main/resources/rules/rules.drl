@@ -8,7 +8,7 @@ import com.ftn.sbnz.model.DepressiveEpisode;
 import com.ftn.sbnz.model.ManicEpisode;
 import com.ftn.sbnz.model.DepressionType;
 import com.ftn.sbnz.model.ManiaType;
-import com.ftn.sbnz.model.GenderType;
+import com.ftn.sbnz.model.Gender;
 import com.ftn.sbnz.model.BipolarDisorderType;
 import com.ftn.sbnz.model.BipolarDisorder;
 import com.ftn.sbnz.model.Cyclothymia;
@@ -116,7 +116,7 @@ end
 rule "Check if depression is with paripartum onset (in pragnancy)"
 when
     $de : DepressionEvent($de_intensity : intensity)
-    $patient : Patient($id : id, gender == GenderType.FEMALE, $de.getPatient().getId() == $id)
+    $patient : Patient($id : id, gender == Gender.FEMALE, $de.getPatient().getId() == $id)
     $s1 : Symptom(name == "in pregnancy", intensity == 5, patientId == $id)
 then
     insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5, false));
@@ -126,7 +126,7 @@ end
 rule "Check if depression is with paripartum onset (after pragnancy)"
 when
     $de : DepressionEvent($de_intensity : intensity)
-    $patient : Patient($id : id, gender == GenderType.FEMALE, $de.getPatient().getId() == $id)
+    $patient : Patient($id : id, gender == Gender.FEMALE, $de.getPatient().getId() == $id)
     $s1 : Symptom(name == "after pregnancy", intensity == 5, patientId == $id)
 then
     insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5, false));
@@ -230,7 +230,7 @@ end
 
 rule "Check if Manic Episode and Depressive Episode (paripartum) overlap over time window of 2 months"
 when
-    $patient : Patient($id : id, gender == GenderType.FEMALE)
+    $patient : Patient($id : id, gender == Gender.FEMALE)
     $de : DepressiveEpisode(depressionType == DepressionType.WITH_PERIPARTUM_ONSET,
                             $depression_intensity : intensitySum,
                             patient.getId() == $id)

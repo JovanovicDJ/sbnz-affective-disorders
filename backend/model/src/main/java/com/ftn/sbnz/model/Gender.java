@@ -1,6 +1,6 @@
 package com.ftn.sbnz.model;
 
-public enum GenderType {
+public enum Gender {
     MALE,
     FEMALE
 }
