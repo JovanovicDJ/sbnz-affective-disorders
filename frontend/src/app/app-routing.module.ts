@@ -6,8 +6,8 @@ import { HomepageComponent } from './shared/components/homepage/homepage.compone
 import { AffectiveDisordersFormComponent } from './affective-disorders/affective-disorders-form/affective-disorders-form.component';
 
 const routes: Routes = [
-  { path:"psyhopaty" , component: PsyhopatyFormComponent },,
   {path:"", component:LoginComponent},
+  { path:"psyhopaty" , component: PsyhopatyFormComponent },
   {path:"doctor/homepage", component:HomepageComponent},
   {path:"doctor/psyhotest", component:PsyhopatyFormComponent},
   { path: "affective-disorders", component: AffectiveDisordersFormComponent },
