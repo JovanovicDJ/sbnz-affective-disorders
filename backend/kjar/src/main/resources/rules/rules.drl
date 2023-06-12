@@ -27,7 +27,7 @@ global Boolean maxRuleExecuted;
 rule "Check shared depression symptoms if intensity is higher then 45 make DepressionEvent"
 when
     $patient : Patient($id : id)
-    $s1 : Symptom(name == "affect", intensity >= 4, patientId == $id)
+    $s1 : Symptom(name == "low affect", intensity >= 4, patientId == $id)
     $s2 : Symptom(name == "anhedonia", intensity >= 3, patientId == $id)
     $s3 : Symptom(name == "hopelessness", intensity >= 4, patientId == $id)
     $s4 : Symptom(name == "worthlessness", intensity >= 4, patientId == $id)
@@ -45,7 +45,7 @@ rule "Check if depression is with anxious agitation"
 when
     $de : DepressionEvent($de_intensity : intensity)
     $patient : Patient($id : id, $de.getPatient().getId() == $id)
-    $s1 : Symptom(name == "concentration",
+    $s1 : Symptom(name == "low concentration",
                   symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE,
                   intensity >= 4, patientId == $id)
     $s2 : Symptom(name == "tension", intensity >= 4, patientId == $id)
@@ -260,10 +260,9 @@ when
     $meList : List(size > 2) from collect(
         ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA)
     )
-    over window : time(365d)
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
-                               $depression_intensity + $mania_intensity, true));
+                               $depression_intensity.intValue() + $mania_intensity.intValue(), true));
 end
 
 
@@ -282,31 +281,27 @@ when
     over window : time(365d)
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
-                               $depression_intensity + $mania_intensity + $hypomania_intensity, true));
+                               $depression_intensity.intValue() + $mania_intensity + $hypomania_intensity, true));
 end
 
 
 rule "Check if there are conditions for bipolar disorder with quick change (with hypomanias)"
 when
     $patient : Patient($id : id)
-    $depression_intensity : Number() from accumulate(
-        DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
-        sum($intensity)
-    )
     $beList : List(size > 2) from collect(
         DepressiveEpisode(patient.getId() == $id)
     )
-    $hypomania_intensity : Number() from accumulate(
-        ManicEpisode($intensity : intensitySum, patient.getId() == $id),
-        sum($intensity)
-    )
     $meList : List(size > 2) from collect(
-        ManicEpisode(patient.getId() == $id, maniaType == ManiaType.HYPOMANIA)
-    )
-    over window : time(365d)
+        ManicEpisode(patient.getId() == $id, maniaType == ManiaType.HYPOMANIA))
+    $hypomania_intensity : Number() from accumulate(
+            ManicEpisode($intensity : intensitySum, patient.getId() == $id),
+            sum($intensity))
+    $depression_intensity : Number() from accumulate(
+            DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
+            sum($intensity))
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
-                               $depression_intensity + $hypomania_intensity, true));
+                               $depression_intensity.intValue() + $hypomania_intensity.intValue(), true));
 end
 
 

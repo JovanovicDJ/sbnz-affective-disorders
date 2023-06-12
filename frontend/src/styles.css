@@ -24,3 +24,15 @@ body { font-family: Roboto, "Helvetica Neue", sans-serif;}
     color: white !important;
   }
   /* Message Styles -----------------------------------------------------------------------------------*/
+  .mat-accent .mat-slider-track-fill {
+    background-color: #3700B3 !important;
+}
+
+.mat-slider-thumb-label {
+    background-color: #3700B3 !important;
+
+}
+
+.mat-slider-thumb {
+    background-color: #3700B3 !important;
+}
