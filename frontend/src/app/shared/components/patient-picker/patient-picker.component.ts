@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Patient } from '../../dto/Patient';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -20,27 +20,29 @@ export class PatientPickerComponent implements OnInit {
     gender: ''
   }
 
-  form : FormGroup = new FormGroup({
-    name: new FormControl(),
-    surname : new FormControl(),
-    email : new FormControl(),
-    phoneNum: new FormControl(),
-    dob: new FormControl(),
-    gender: new FormControl()
-  });
+  // form : FormGroup = new FormGroup({
+  //   name: new FormControl(),
+  //   surname : new FormControl(),
+  //   email : new FormControl(),
+  //   phoneNum: new FormControl(),
+  //   dob: new FormControl(),
+  //   gender: new FormControl()
+  // });
   
   @Input() patients : Patient[] = [];
 
+  @Output() patientChanged : EventEmitter<Patient> = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
   }
 
   selectedPatientChanged(){
-    this.form.get('name')?.setValue(this.selectedPatient.name);
-    this.form.get('surname')?.setValue(this.selectedPatient.surname);
-    this.form.get('email')?.setValue(this.selectedPatient.email);
-    this.form.get('phoneNum')?.setValue(this.selectedPatient.phoneNum);
-    this.form.get('dob')?.setValue(this.selectedPatient.dob);
+    // this.form.get('name')?.setValue(this.selectedPatient.name);
+    // this.form.get('surname')?.setValue(this.selectedPatient.surname);
+    // this.form.get('email')?.setValue(this.selectedPatient.email);
+    // this.form.get('phoneNum')?.setValue(this.selectedPatient.phoneNum);
+    // this.form.get('dob')?.setValue(this.selectedPatient.dob);
+    this.patientChanged.emit(this.selectedPatient);
   }
 }

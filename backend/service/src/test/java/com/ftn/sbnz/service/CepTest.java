@@ -18,7 +18,7 @@ public class CepTest {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.FEMALE,"mika@gmail.com", "0645533665");
+                Gender.FEMALE,"mika@gmail.com", "0645533665",1L);
         kieSession.insert(patient);;
 
         for(int i = 0 ; i < 24 ; i++)

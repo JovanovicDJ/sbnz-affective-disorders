@@ -32,7 +32,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                                      Gender.MALE,"mika@gmail.com", "0645533665");
+                                      Gender.MALE,"mika@gmail.com", "0645533665",1L);
 
         kieSession.insert(patient);
 
@@ -76,7 +76,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
         DepressionEvent depressionEvent = new DepressionEvent(patient, 51);
 
         kieSession.insert(patient);
@@ -110,7 +110,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
         DepressionEvent depressionEvent = new DepressionEvent(patient, 51);
 
         kieSession.insert(patient);
@@ -144,7 +144,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
         DepressionEvent depressionEvent = new DepressionEvent(patient, 51);
 
         kieSession.insert(patient);
@@ -172,7 +172,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
         DepressionEvent depressionEvent = new DepressionEvent(patient, 51);
 
         kieSession.insert(patient);
@@ -204,7 +204,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.FEMALE,"mika@gmail.com", "0645533665");
+                Gender.FEMALE,"mika@gmail.com", "0645533665",1L);
         DepressionEvent depressionEvent = new DepressionEvent(patient, 51);
 
         kieSession.insert(patient);
@@ -231,7 +231,7 @@ public class AffectiveDisordersTests {
         KieSession kieSession = kc.newKieSession("affectivedisorders");
 
         Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.FEMALE,"mika@gmail.com", "0645533665");
+                Gender.FEMALE,"mika@gmail.com", "0645533665",1L);
         kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, patient, 78, false));
         kieSession.insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, patient, 85, false));
         kieSession.insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, patient, 65, false));
@@ -258,7 +258,7 @@ public class AffectiveDisordersTests {
         clock.advanceTime(startTime, TimeUnit.MILLISECONDS);
 
         Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.FEMALE,"mika@gmail.com", "0645533665");
+                Gender.FEMALE,"mika@gmail.com", "0645533665",1L);
         kieSession.insert(patient);
 
         kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, patient, 78, false));
@@ -305,7 +305,7 @@ public class AffectiveDisordersTests {
         kieSession.insert(new Symptom("duration", 5, SymptomGroup.MANIC_EPISODE, 0));
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
 
         kieSession.insert(patient);
         long ruleFireCount = kieSession.fireAllRules();

@@ -1,5 +1,5 @@
 <mat-card>
-    <mat-form-field>
+    <mat-form-field id="patient-picker">
         <mat-label>Pacijent za kojeg se radi test</mat-label>
         <mat-select (selectionChange)="selectedPatientChanged()" [(value)]="selectedPatient">
             <mat-option *ngFor="let p of patients" [value]="p">
@@ -7,7 +7,7 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <form [formGroup]="form">
+    <!-- <form [formGroup]="form">
         <mat-form-field>
             <input
               matInput
@@ -46,6 +46,6 @@
                 [readonly]="true"
               />
             </mat-form-field>
-    </form>
+    </form> -->
 
 </mat-card>

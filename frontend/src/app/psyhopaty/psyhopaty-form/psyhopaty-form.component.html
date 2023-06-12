@@ -1,72 +1,411 @@
 <app-patient-picker [patients]="patients">
 
 </app-patient-picker>
+<div class="main">
+    <mat-card class="card">
+        <mat-card-header>
+          <mat-card-title>Psihopatskih poremećaji</mat-card-title>
+          <mat-card-subtitle>Test za otkrivanje Psihopatskih poremećaja</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="form">
+                <mat-accordion class="example-headers-align">
+                    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title><b>Način života</b></mat-panel-title>
+                        <mat-panel-description>
+                        Simptomi koji se odnose na način života  
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    
+                    <div class="main-form">
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Potreba za stimulacijom:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="need for stimulation">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Patazitski način života:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="parasitic lifesytle">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Bez dugoročnih planova:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="no long-term goals">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Bez ambicija:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="no ambition">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Impulsivne reakcije:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="impulsiveness">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Neodgovornost:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="irresponsibility">
+                                </mat-slider>
+                            </div>
+                        </div>                        
+                    </div>
+                    <br />
+                    <mat-action-row>
+                        <button mat-button color="primary" (click)="nextStep()">Sledeće</button>
+                    </mat-action-row>
+                    </mat-expansion-panel>
+                
+                    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title><b>Afekat</b></mat-panel-title>
+                        <mat-panel-description>
+                        Simptomi koji spadaju u grupu afekata
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                
+                    <div class="main-form">
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Ograničeni afekat:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="limited affect">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Bez empatije:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="no empathy">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Bez odgovornosti:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="no responsibility">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Bez kajanja:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="no remorse">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Bez osećaja krivice:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="no guilt">
+                                </mat-slider>
+                            </div>
+                        </div>                   
+                    </div>
+                
+                    <mat-action-row>
+                        <button mat-button color="warn" (click)="prevStep()">Prethodno</button>
+                        <button mat-button color="primary" (click)="nextStep()">Sledeće</button>
+                    </mat-action-row>
+                    </mat-expansion-panel>
+                
+                    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title><b>Međuljdski odnosi</b></mat-panel-title>
+                        <mat-panel-description>
+                        Simptomi koji opisuju međuljudske odnose                        
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                
+                    <div class="main-form">
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                               Grandioznost:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="grandiosity">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Patološko laganje:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="pathological lying">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Manipulacija:
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="manipulativeness">
+                                </mat-slider>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="single-slider">
+                            <div class="slider-label">
+                                Veštački šarm   :
+                            </div>
+                            <div class="slider-container">
+                                <mat-slider
+                                    class="example-margin"
+                                    [max]="5"
+                                    [min]="1"
+                                    [step]="1"
+                                    [thumbLabel]="true"
+                                    value="3"
+                                    formControlName="artificial charm">
+                                </mat-slider>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <mat-action-row>
+                        <button mat-button color="warn" (click)="prevStep()">Prethodno</button>
+                        <button mat-button color="primary" (click)="nextStep()">Sledeće</button>
+                    </mat-action-row>
+                    </mat-expansion-panel>
 
-<form [formGroup]="form">
-    <div class="headline">
-        <span>TEST za PSIHOPATIJU</span>
-    </div>
-    <div class="question">
-        <hr/>
-        <div class="question-text">
-            Procena koliko su pacijentovi međuljudski odnosi loši: 
-        </div>
-        <div class="slider">
-            <div class="values">
-                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
-            </div>
-            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="INTERPERSONAL_FACTOR">
-                <input matSliderThumb >
-            </mat-slider>       
-        </div>
-        <hr/>
-    </div>
-    <div class="question">
-        <hr/>
-        <div class="question-text">
-            Procena koliko pacijent ima negativnog afekta: 
-        </div>
-        <div class="slider">
-            <div class="values">
-                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
-            </div>
-            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="AFFECTIVE_FACTOR">
-                <input matSliderThumb >
-            </mat-slider>       
-        </div>
-        <hr/>
-    </div>
-    <div class="question">
-        <hr/>
-        <div class="question-text">
-            Procena koliko pacijent ima negativan način života: 
-        </div>
-        <div class="slider">
-            <div class="values">
-                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
-            </div>
-            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="LIFESTYLE_FACTOR">
-                <input matSliderThumb >
-            </mat-slider>       
-        </div>
-        <hr/>
-    </div>
-    <div class="question">
-        <hr/>
-        <div class="question-text">
-            Procena koliko je pacijent asocijalan: 
-        </div>
-        <div class="slider">
-            <div class="values">
-                <span *ngFor="let i of [1,2,3,4,5]">{{i}}</span>
-            </div>
-            <mat-slider min="1" max="5" step="0.5" value="3" formControlName="ANTISOCIAL_FACTOR">
-                <input matSliderThumb >
-            </mat-slider>       
-        </div>
-        <hr/>
-    </div>
-    <div class="save-command">
-        <button mat-raised-button  color="primary" (click)="submit()">Sacuvaj odgovore</button>
-    </div>
-</form>
+                    <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title><b>Antisocijalnost</b></mat-panel-title>
+                            <mat-panel-description>
+                            Simptomi koji oslikavaju antisocijalnost pacijenta:
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                    
+                        <div class="main-form">
+                            <br />
+                            <div class="single-slider">
+                                <div class="slider-label">
+                                    Slaba kontrola situacije:
+                                </div>
+                                <div class="slider-container">
+                                    <mat-slider
+                                        class="example-margin"
+                                        [max]="5"
+                                        [min]="1"
+                                        [step]="1"
+                                        [thumbLabel]="true"
+                                        value="3"
+                                        formControlName="weak control">
+                                    </mat-slider>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="single-slider">
+                                <div class="slider-label">
+                                    Rani problemi sa ponasanjem:
+                                </div>
+                                <div class="slider-container">
+                                    <mat-slider
+                                        class="example-margin"
+                                        [max]="5"
+                                        [min]="1"
+                                        [step]="1"
+                                        [thumbLabel]="true"
+                                        value="3"
+                                        formControlName="early behavior problems">
+                                    </mat-slider>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="single-slider">
+                                <div class="slider-label">
+                                    Maloletnicka delikvencija:
+                                </div>
+                                <div class="slider-container">
+                                    <mat-slider
+                                        class="example-margin"
+                                        [max]="5"
+                                        [min]="1"
+                                        [step]="1"
+                                        [thumbLabel]="true"
+                                        value="3"
+                                        formControlName="juvenile delinquency">
+                                    </mat-slider>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="single-slider">
+                                <div class="slider-label">
+                                    Kriminalne aktivnosti:
+                                </div>
+                                <div class="slider-container">
+                                    <mat-slider
+                                        class="example-margin"
+                                        [max]="5"
+                                        [min]="1"
+                                        [step]="1"
+                                        [thumbLabel]="true"
+                                        value="3"
+                                        formControlName="criminal diversity">
+                                    </mat-slider>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    
+                        <mat-action-row>
+                            <button mat-button color="warn" (click)="prevStep()">Prethodno</button>
+                            <button mat-raised-button color="primary" (click)="sendForm()">Pošalji</button>
+                        </mat-action-row>
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+          
+        </mat-card-actions>
+    </mat-card>
+</div>

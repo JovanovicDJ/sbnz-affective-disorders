@@ -5,6 +5,8 @@ import { LoginService } from 'src/app/shared/services/login-service/login.servic
 import { Router } from '@angular/router';
 import { Patient } from 'src/app/shared/dto/Patient';
 import { PatientService } from 'src/app/shared/services/patient-service/patient.service';
+import { AffectiveDisordersService } from 'src/app/affective-disorders/services/affective-disorders.service';
+import { MessageService, MessageType } from 'src/app/shared/services/message-service/message.service';
 
 @Component({
   selector: 'app-psyhopaty-form',
@@ -13,17 +15,17 @@ import { PatientService } from 'src/app/shared/services/patient-service/patient.
 })
 export class PsyhopatyFormComponent implements OnInit {
 
+  step = 0;
+
+  form : FormGroup = this.generateFormGroup();
+
   patients : Patient[] = [];
   
-  form : FormGroup = new FormGroup({
-    INTERPERSONAL_FACTOR: new FormControl(3),
-    AFFECTIVE_FACTOR: new FormControl(3),
-    LIFESTYLE_FACTOR: new FormControl(3),
-    ANTISOCIAL_FACTOR: new FormControl(3)    
-  });
 
   constructor(
     private psyhopatyService: PsyhopatyService,
+    private affectiveDisordersService:AffectiveDisordersService,
+    private messageService:MessageService,
     private userService: LoginService,
     private router : Router,
     private patientService: PatientService
@@ -45,10 +47,58 @@ export class PsyhopatyFormComponent implements OnInit {
     )
   }
 
-  submit(){
-    console.log(this.form.getRawValue());
-    //make DTO 
-    // this.psyhopatyService.addNewPatientTest();
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
+
+  sendForm() {
+    const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity }));
+    console.log(symptomList);
+    this.affectiveDisordersService
+      .sendSymptoms(symptomList)
+      .subscribe({
+      next: (res: any) => {          
+        console.log(res);
+      },
+      error: (err) => {
+        this.messageService.showMessage(err.error.message, MessageType.ERROR);
+      }
+    });
+  }
+
+  generateFormGroup(): FormGroup {
+    return new FormGroup({
+      "need for stimulation": new FormControl(3),
+      "parasitic lifesytle": new FormControl(3),
+      "no long-term goals": new FormControl(3),
+      "no ambition": new FormControl(3),
+      "impulsiveness": new FormControl(3),
+      "irresponsibility": new FormControl(3),
+      
+      "limited affect": new FormControl(3),
+      "no empathy": new FormControl(3),
+      "no responsibility": new FormControl(3),
+      "no remorse": new FormControl(3),
+      "no guilt": new FormControl(3),
+      
+      "grandiosity": new FormControl(3),
+      "pathological lying": new FormControl(3),
+      "manipulativeness": new FormControl(3),
+      "artificial charm": new FormControl(3),
+      
+      "weak control": new FormControl(3),
+      "early behavior problems": new FormControl(3),
+      "juvenile delinquency": new FormControl(3),
+      "criminal diversity": new FormControl(3),
+    });
   }
 
 }

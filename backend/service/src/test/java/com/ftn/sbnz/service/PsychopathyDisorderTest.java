@@ -20,7 +20,7 @@ public class PsychopathyDisorderTest {
         KieSession kieSession = kc.newKieSession("psychopathydisorder");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
 
         kieSession.insert(patient);
 
@@ -51,7 +51,7 @@ public class PsychopathyDisorderTest {
         KieSession kieSession = kc.newKieSession("psychopathydisorder");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
 
         kieSession.insert(patient);
 
@@ -79,7 +79,7 @@ public class PsychopathyDisorderTest {
         KieSession kieSession = kc.newKieSession("psychopathydisorder");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
 
         kieSession.insert(patient);
 
@@ -105,7 +105,7 @@ public class PsychopathyDisorderTest {
         KieSession kieSession = kc.newKieSession("psychopathydisorder");
 
         Patient patient = new Patient(0,"Mika","Mikic", LocalDate.of(2000, 2, 15),
-                Gender.MALE,"mika@gmail.com", "0645533665");
+                Gender.MALE,"mika@gmail.com", "0645533665",1L);
 
         kieSession.insert(patient);
 

@@ -1,42 +1,51 @@
-form{
-    width: 100%;
+.main {
     display: flex;
-    align-items: center;
     justify-content: center;
+    margin-top: 50px;
+}
+
+.card {
+    /* max-width: 900px; */
+    /* min-width: 900px; */
+    width: 900px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.mat-slider {
+    max-width: 550px;
+    width: 100%;
+}
+
+.main-form {
+    display: flex;
     flex-direction: column;
 }
 
-.headline{
-    font-size: 2em;
-    font-weight: bolder;
-    padding: 15px 0;
-}
-.question{
-    width: 100%;
-}
-.question-text{
-    padding: 20px;
-    font-weight: bold;
+.single-slider {
+    display: flex;
+    justify-content: space-around;
 }
 
-.slider{
-    padding: 50px;
+.slider-label {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-}
-.slider mat-slider{
-    width: 80%;
-}
-.slider .values{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap:20% ;
-    font-weight: bolder;
 }
 
-.save-command{
-    padding: 50px;
+.slider-container {
+    flex: 2;
 }
