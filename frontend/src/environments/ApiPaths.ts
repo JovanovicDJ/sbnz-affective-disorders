@@ -1,3 +1,4 @@
 export enum ApiPaths {
-  PSYHOPATY="psyhopaty", 
+  PSYHOPATY="psyhopaty",
+  SYMPTOMS="symptom"
 }

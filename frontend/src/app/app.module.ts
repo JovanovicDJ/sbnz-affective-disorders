@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { MatSliderModule } from '@angular/material/slider';
 import { PsyhopatyModule } from './psyhopaty/psyhopaty.module';
+import { AffectiveDisordersModule } from './affective-disorders/affective-disorders.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PsyhopatyModule } from './psyhopaty/psyhopaty.module';
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    PsyhopatyModule
+    PsyhopatyModule,
+    AffectiveDisordersModule
   ],
   providers: [],
   bootstrap: [AppComponent]

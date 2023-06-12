@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PsyhopatyFormComponent } from './psyhopaty/psyhopaty-form/psyhopaty-form.component';
+import { AffectiveDisordersFormComponent } from './affective-disorders/affective-disorders-form/affective-disorders-form.component';
 
 const routes: Routes = [
-  {path:"psyhopaty" , component: PsyhopatyFormComponent}
-  
+  { path:"psyhopaty" , component: PsyhopatyFormComponent },
+  { path: "affective-disorders", component: AffectiveDisordersFormComponent },
 ];
 
 @NgModule({

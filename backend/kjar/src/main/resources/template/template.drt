@@ -22,7 +22,7 @@ rule "Check if the symptoms are consistent with mania"
         $s1 : Symptom(name == "euphoria", intensity >= @{borderSymptomValue}, patientId == $id)
         $s2 : Symptom(name == "excessive activity", intensity >= @{borderSymptomValue}, patientId == $id)
         $s3 : Symptom(name == "hyperoptimism", intensity >= @{borderSymptomValue}, patientId == $id)
-        $s4 : Symptom(name == "duration", intensity > @{borderSymptomValue}, patientId == $id)
+        $s4 : Symptom(name == "duration", intensity >= @{minSymptomValue}, patientId == $id)
         $total : Number(this >= @{maniaBorderValue},
                         this <= @{maxValue}) from accumulate(
                             Symptom($intensity : intensity, symptomGroup == SymptomGroup.MANIC_EPISODE, patientId == $id),
