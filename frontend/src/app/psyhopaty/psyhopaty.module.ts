@@ -4,6 +4,7 @@ import { PsyhopatyFormComponent } from './psyhopaty-form/psyhopaty-form.componen
 import { MatSliderModule } from '@angular/material/slider';
 import { MaterialModule } from '../shared/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -14,7 +15,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class PsyhopatyModule { }

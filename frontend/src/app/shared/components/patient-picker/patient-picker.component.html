@@ -1,0 +1,51 @@
+<mat-card>
+    <mat-form-field>
+        <mat-label>Pacijent za kojeg se radi test</mat-label>
+        <mat-select (selectionChange)="selectedPatientChanged()" [(value)]="selectedPatient">
+            <mat-option *ngFor="let p of patients" [value]="p">
+            {{p.name}} {{p.surname}} - {{p.email}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <form [formGroup]="form">
+        <mat-form-field>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="Ime"
+              name="name"
+              [readonly]="true"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="surname"
+              placeholder="Prezime"
+              name="surname"
+              [readonly]="true"
+            />
+          </mat-form-field>
+      
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="email"
+              placeholder="E-mail"
+              name="email"
+              [readonly]="true"
+            />
+          </mat-form-field>
+      
+          <mat-form-field>
+              <input
+                matInput
+                formControlName="phoneNum"
+                placeholder="Broj telefona"
+                name="phoneNum"
+                [readonly]="true"
+              />
+            </mat-form-field>
+    </form>
+
+</mat-card>

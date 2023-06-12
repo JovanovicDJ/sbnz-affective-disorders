@@ -1,0 +1,56 @@
+<form [formGroup]="form">
+    <h2 id="login-label">Novi pacijent</h2>
+    <mat-form-field>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="Ime"
+        name="name"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        formControlName="surname"
+        placeholder="Prezime"
+        name="surname"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        matInput
+        formControlName="email"
+        placeholder="E-mail"
+        name="email"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+          matInput
+          formControlName="phoneNum"
+          placeholder="Broj telefona"
+          name="phoneNum"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Datum rodjenja</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dob">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      
+        <mat-form-field>
+            <mat-label>Pol</mat-label>
+            <select matNativeControl required formControlName="gender">
+            <option value="MALE">Muski</option>
+            <option value="FEMALE">Zenski</option>
+            </select>
+        </mat-form-field>
+    
+      <button mat-raised-button colot="primary" (click)="addNewPatient()">
+        Dodaj novog pacijenta
+      </button>
+</form>

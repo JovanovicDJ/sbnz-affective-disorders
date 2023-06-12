@@ -11,6 +11,9 @@ public class Patient {
     @Column(name = "patient_id", nullable = false)
     private Long id;
 
+    @Column(name = "doctor_id", nullable = false)
+    private Long doctorID;
+
     @Column(name ="name",nullable = false)
     private String name;
 
@@ -31,7 +34,7 @@ public class Patient {
 
     public Patient() { }
 
-    public Patient(long id, String name, String surname, LocalDate dob, Gender gender, String email, String phoneNum) {
+    public Patient(long id, String name, String surname, LocalDate dob, Gender gender, String email, String phoneNum,Long doctorID) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -39,6 +42,15 @@ public class Patient {
         this.gender = gender;
         this.email = email;
         this.phoneNum = phoneNum;
+        this.doctorID = doctorID;
+    }
+
+    public Long getDoctorID() {
+        return doctorID;
+    }
+
+    public void setDoctorID(Long doctorID) {
+        this.doctorID = doctorID;
     }
 
     public Long getId() {

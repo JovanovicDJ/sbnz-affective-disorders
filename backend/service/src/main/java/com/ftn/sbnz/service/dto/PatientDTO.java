@@ -20,6 +20,16 @@ public class PatientDTO {
 
     private String phoneNum;
 
+    private Long doctorID;
+
+    public Long getDoctorID() {
+        return doctorID;
+    }
+
+    public void setDoctorID(Long doctorID) {
+        this.doctorID = doctorID;
+    }
+
     public Long getId() {
         return id;
     }

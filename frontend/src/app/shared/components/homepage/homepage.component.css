@@ -1,0 +1,13 @@
+.new-tests{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:20%
+}
+
+table{
+    width: 100%;
+}
+.list-head{
+    display: flex;
+}

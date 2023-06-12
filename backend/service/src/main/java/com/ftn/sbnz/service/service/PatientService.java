@@ -6,6 +6,8 @@ import com.ftn.sbnz.service.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PatientService {
 
@@ -16,6 +18,9 @@ public class PatientService {
         return this.patientRepository.findByEmail(email);
     }
 
+    public List<Patient> findByDoctorID(Long doctorID){
+        return this.patientRepository.findByDoctorID(doctorID);
+    }
     public Patient save(PatientDTO patientDTO) {
         Patient patient = new Patient();
 
@@ -25,6 +30,7 @@ public class PatientService {
         patient.setGender(patientDTO.getGender());
         patient.setEmail(patientDTO.getEmail());
         patient.setPhoneNum(patientDTO.getPhoneNum());
+        patient.setDoctorID(patientDTO.getDoctorID());
 
         return patientRepository.save(patient);
     }
