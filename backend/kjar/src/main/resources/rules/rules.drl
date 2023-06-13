@@ -140,7 +140,7 @@ when
     not DepressiveEpisode(intensitySum > $intensity, accepted == false, patient.getId() == $id)
 then
     if (!maxRuleExecuted) {
-        modify($max){setAccepted(true)}
+        //modify($max){setAccepted(true)}
         drools.getKnowledgeRuntime().setGlobal("maxRuleExecuted", true);
     }
 end
@@ -262,7 +262,7 @@ when
     )
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
-                               $depression_intensity.intValue() + $mania_intensity.intValue(), true));
+                               $depression_intensity.intValue() + $mania_intensity.intValue(), false));
 end
 
 
@@ -281,7 +281,7 @@ when
     over window : time(365d)
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
-                               $depression_intensity.intValue() + $mania_intensity + $hypomania_intensity, true));
+                               $depression_intensity.intValue() + $mania_intensity + $hypomania_intensity, false));
 end
 
 
@@ -301,7 +301,7 @@ when
             sum($intensity))
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
-                               $depression_intensity.intValue() + $hypomania_intensity.intValue(), true));
+                               $depression_intensity.intValue() + $hypomania_intensity.intValue(), false));
 end
 
 
@@ -420,7 +420,7 @@ when
     )
 then
     int intensitySum = ValidationUtils.calcIntensityRecurrentDisorder($bdsList);
-    insert(new RecurrentDepressiveDisorder($patient, intensitySum, true));
+    insert(new RecurrentDepressiveDisorder($patient, intensitySum, false));
 end
 
 
@@ -435,5 +435,5 @@ when
 then
     delete($rdd);
     delete($me);
-    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $patient, $rdd_intensity + $me_intensity, true));
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $patient, $rdd_intensity + $me_intensity, false));
 end

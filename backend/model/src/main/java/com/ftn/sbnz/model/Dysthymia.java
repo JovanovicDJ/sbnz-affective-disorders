@@ -21,6 +21,9 @@ public class Dysthymia {
     @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
+    @Column(name = "accepted", nullable = false)
+    private boolean accepted;
+
     @Column(name = "deleted", columnDefinition = "boolean default false")
     private boolean deleted;
 
@@ -30,6 +33,7 @@ public class Dysthymia {
         this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;
+        this.accepted = false;
     }
 
     public Long getId() {
@@ -70,5 +74,13 @@ public class Dysthymia {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

@@ -3,7 +3,9 @@ package com.ftn.sbnz.service.dto;
 public class SymptomDTO {
     private String name;
 
-    private String intensity;
+    private int intensity;
+
+    private Long patientId;
 
     public String getName() {
         return name;
@@ -13,11 +15,19 @@ public class SymptomDTO {
         this.name = name;
     }
 
-    public String getIntensity() {
+    public int getIntensity() {
         return intensity;
     }
 
-    public void setIntensity(String intensity) {
+    public void setIntensity(int intensity) {
         this.intensity = intensity;
+    }
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 }

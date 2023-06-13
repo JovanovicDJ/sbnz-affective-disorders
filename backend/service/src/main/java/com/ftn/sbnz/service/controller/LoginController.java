@@ -7,7 +7,7 @@ import com.ftn.sbnz.service.dto.LoginDTO;
 import com.ftn.sbnz.service.dto.PatientDTO;
 import com.ftn.sbnz.service.service.PatientService;
 import com.ftn.sbnz.service.service.UserService;
-import com.ftn.sbnz.service.utils.ErrMsg;
+import com.ftn.sbnz.service.utils.Msg;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.OK).body(doctor);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(gson.toJson(new ErrMsg("Neispravan e-mail ili lozinka!")));
+                    .body(gson.toJson(new Msg("Neispravan e-mail ili lozinka!")));
         }
     }
 
@@ -49,7 +49,7 @@ public class LoginController {
 
         if (existingPatient != null) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body(gson.toJson(new ErrMsg("E-mail je već upotrebljen!")));
+                    .body(gson.toJson(new Msg("E-mail je već upotrebljen!")));
         }
 
         Patient patient = patientService.save(patientDTO);
@@ -65,7 +65,7 @@ public class LoginController {
 
         if (existingDoctor != null) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body(gson.toJson(new ErrMsg("E-mail je već upotrebljen!")));
+                    .body(gson.toJson(new Msg("E-mail je već upotrebljen!")));
         }
 
         Doctor doctor = userService.save(doctorDTO);

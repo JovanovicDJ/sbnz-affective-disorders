@@ -19,6 +19,7 @@ import org.kie.internal.utils.KieHelper;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -87,7 +88,7 @@ public class AffectiveDisordersTests {
         Symptom symptom3 = new Symptom("concern", 3, SymptomGroup.DE_WITH_ANXIETY, 0);
         Symptom symptom4 = new Symptom("assuming the worst", 5, SymptomGroup.DE_WITH_ANXIETY, 0);
         Symptom symptom5 = new Symptom("fear of losing control", 4, SymptomGroup.DE_WITH_ANXIETY, 0);
-        Symptom symptom6 = new Symptom("concentration", 5, SymptomGroup.DEPRESSIVE_EPISODE, 0);
+        Symptom symptom6 = new Symptom("low concentration", 5, SymptomGroup.DEPRESSIVE_EPISODE, 0);
 
         kieSession.insert(symptom1);
         kieSession.insert(symptom2);
