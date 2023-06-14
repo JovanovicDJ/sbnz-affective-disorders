@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -43,8 +44,8 @@ public class HistoryService {
 
     public List<HistoryDTO> getPatientHistory(Long id) {
         List<HistoryDTO> history = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy.");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
         for (ManicEpisode me : manicEpisodeRepository.getManicEpisodesByPatient_Id(id)) {
             history.add(new HistoryDTO("Manična epizoda", dateFormat.format(me.getExecutionTime())));
@@ -65,19 +66,19 @@ public class HistoryService {
             history.add(new HistoryDTO("Distimija", d.getDate().format(formatter)));
         }
         for (AffectiveFactor af : affectiveFactorRepository.getAffectiveFactorsByPatient_Id(id)) {
-            history.add(new HistoryDTO("Afektivni faktor", af.getDate().format(formatter)));
+            history.add(new HistoryDTO("Negativni afekti", af.getDate().format(formatter)));
         }
         for (AntisocialFactor af : antisocialFactorRepository.getAntisocialFactorsByPatient_Id(id)) {
-            history.add(new HistoryDTO("Antisocijalni faktor", af.getDate().format(formatter)));
+            history.add(new HistoryDTO("Asocijalnost", af.getDate().format(formatter)));
         }
         for (InterpersonalFactor ifa : interpersonalFactorRepository.getInterpersonalFactorsByPatient_Id(id)) {
-            history.add(new HistoryDTO("Interpersonalni faktor", ifa.getDate().format(formatter)));
+            history.add(new HistoryDTO("Loši međuljdski odnosi", ifa.getDate().format(formatter)));
         }
         for (LifestyleFactor lf : lifestyleFactorRepository.getLifestyleFactorsByPatient_Id(id)) {
-            history.add(new HistoryDTO("Faktor načina života", lf.getDate().format(formatter)));
+            history.add(new HistoryDTO("Negativan načina života", lf.getDate().format(formatter)));
         }
         for (InterpersonalAffectiveFactor iaf : interpersonalAffectiveFactorRepository.getInterpersonalAffectiveFactorsByPatient_Id(id)) {
-            history.add(new HistoryDTO("Interpersonalni-afektivni faktor", iaf.getDate().format(formatter)));
+            history.add(new HistoryDTO("Negativni međuljdski afekti", iaf.getDate().format(formatter)));
         }
         for (SocialDeviance sd : socialDevianceRepository.getSocialDeviancesByPatient_Id(id)) {
             history.add(new HistoryDTO("Socijalna devijacija", sd.getDate().format(formatter)));
@@ -85,7 +86,7 @@ public class HistoryService {
         for (Psychopathy p : psychopathyRepository.getPsychopathiesByPatient_Id(id)) {
             history.add(new HistoryDTO("Psihopatija", p.getDate().format(formatter)));
         }
-
+        Collections.sort(history);
         return history;
     }
 }

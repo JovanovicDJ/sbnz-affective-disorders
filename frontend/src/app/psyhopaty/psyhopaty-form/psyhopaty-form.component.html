@@ -100,7 +100,7 @@
                                     [step]="1"
                                     [thumbLabel]="true"
                                     value="3"
-                                    formControlName="impulsiveness">
+                                    formControlName="impulsiveness2">
                                 </mat-slider>
                             </div>
                         </div>
@@ -409,4 +409,7 @@
           
         </mat-card-actions>
     </mat-card>
+</div>
+<div class="over-window" *ngIf="showSpiner">
+    <mat-spinner class="progres" color="primary" ></mat-spinner>
 </div>

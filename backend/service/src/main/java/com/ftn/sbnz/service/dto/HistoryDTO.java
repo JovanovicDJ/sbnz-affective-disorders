@@ -1,6 +1,6 @@
 package com.ftn.sbnz.service.dto;
 
-public class HistoryDTO {
+public class HistoryDTO implements Comparable<HistoryDTO> {
 
     private String name;
 
@@ -27,4 +27,8 @@ public class HistoryDTO {
         this.date = date;
     }
 
+    @Override
+    public int compareTo(HistoryDTO o) {
+        return o.date.compareTo(this.date);
+    }
 }

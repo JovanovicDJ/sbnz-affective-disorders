@@ -16,6 +16,7 @@ import { MessageService, MessageType } from 'src/app/shared/services/message-ser
 export class PsyhopatyFormComponent implements OnInit {
 
   step = 0;
+  showSpiner :boolean = false;
 
   form : FormGroup = this.generateFormGroup();
   patient : Patient ={
@@ -69,13 +70,17 @@ export class PsyhopatyFormComponent implements OnInit {
   }
 
   sendForm() {
-    const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity }));
+    this.showSpiner = true;
+    const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity, patientId:this.patient.id }));
     console.log(symptomList);
     this.psyhopatyService
-      .sendSymptoms(symptomList,this.patient)
+      .sendSymptoms(symptomList)
       .subscribe({
-      next: (res: any) => {          
+      next: (res: any) => {
+        this.showSpiner= false; 
+        this.messageService.showMessage(res.message,MessageType.SUCCESS);         
         console.log(res);
+        this.router.navigateByUrl("patient/history/"+this.patient.id);
       },
       error: (err) => {
         this.messageService.showMessage(err.error.message, MessageType.ERROR);
@@ -89,7 +94,7 @@ export class PsyhopatyFormComponent implements OnInit {
       "parasitic lifesytle": new FormControl(3),
       "no long-term goals": new FormControl(3),
       "no ambition": new FormControl(3),
-      "impulsiveness": new FormControl(3),
+      "impulsiveness2": new FormControl(3),
       "irresponsibility": new FormControl(3),
       
       "limited affect": new FormControl(3),

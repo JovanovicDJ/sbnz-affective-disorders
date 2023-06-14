@@ -47,7 +47,7 @@ when
     $s2 : Symptom(name == "no empathy", intensity >= 3, patientId == $id)
     $s3 : Symptom(name == "no responsibility", intensity >= 4, patientId == $id)
     $s4 : Symptom(name == "no remorse", intensity >= 3, patientId == $id)
-    $s5 : Symptom(name == " no guilt", intensity >= 3, patientId == $id)
+    $s5 : Symptom(name == "no guilt", intensity >= 3, patientId == $id)
     $total : Number(this > 18 ) from accumulate(
         Symptom($intensity : intensity, symptomGroup == SymptomGroup.AFFECTIVE_FACTOR, patientId == $id),
         sum($intensity)
@@ -64,7 +64,7 @@ when
     $s2 : Symptom(name == "parasitic lifesytle", intensity >= 3, patientId == $id)
     $s3 : Symptom(name == "no long-term goals", intensity >= 4, patientId == $id)
     $s4 : Symptom(name == "no ambition", intensity >= 3, patientId == $id)
-    $s5 : Symptom(name == "impulsiveness", intensity >= 3, patientId == $id)
+    $s5 : Symptom(name == "impulsiveness2", intensity >= 3, patientId == $id)
     $s6 : Symptom(name == "irresponsibility", intensity >= 3, patientId == $id)
     $total : Number(this > 23) from accumulate(
         Symptom($intensity : intensity, symptomGroup == SymptomGroup.LIFESTYLE_FACTOR, patientId == $id),
@@ -128,6 +128,6 @@ when
     $iaf : InterpersonalAffectiveFactor(patient.getId() == $id , $iaf_intensity: intensitySum)
     over window : time(60d)
 then
-    insert(new InterpersonalAffectiveFactor($patient, LocalDate.now(), $scd_intensity + $iaf_intensity ) );
+    insert(new Psychopathy($patient, LocalDate.now(), $scd_intensity + $iaf_intensity ) );
 end
 

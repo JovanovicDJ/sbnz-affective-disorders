@@ -14,6 +14,6 @@ export class HistoryService {
   constructor(private http: HttpClient) {}
 
   getHistoryForPatient(patient:Patient):Observable<HistoryData[]> {
-    return this.http.get<HistoryData[]>(`${environment.baseUrl}/${ApiPaths.HISTORY}/${patient.id}`);
+    return this.http.get<HistoryData[]>(`${environment.baseUrl}/${ApiPaths.PATIENTS}/${ApiPaths.HISTORY}/${patient.id}`);
   }
 }

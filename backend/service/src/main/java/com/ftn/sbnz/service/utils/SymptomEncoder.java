@@ -53,6 +53,30 @@ public class SymptomEncoder {
         symptomGroupMap.put("impulsiveness", SymptomGroup.MANIC_EPISODE);
         symptomGroupMap.put("aggressiveness", SymptomGroup.MANIC_EPISODE);
         symptomGroupMap.put("disinhibition", SymptomGroup.MANIC_EPISODE);
+        //-----------------------------------
+        symptomGroupMap.put("need for stimulation", SymptomGroup.LIFESTYLE_FACTOR);
+        symptomGroupMap.put("parasitic lifesytle", SymptomGroup.LIFESTYLE_FACTOR);
+        symptomGroupMap.put("no long-term goals", SymptomGroup.LIFESTYLE_FACTOR);
+        symptomGroupMap.put("no ambition", SymptomGroup.LIFESTYLE_FACTOR);
+        symptomGroupMap.put("impulsiveness2", SymptomGroup.LIFESTYLE_FACTOR);
+        symptomGroupMap.put("irresponsibility", SymptomGroup.LIFESTYLE_FACTOR);
+
+        symptomGroupMap.put("limited affect", SymptomGroup.AFFECTIVE_FACTOR);
+        symptomGroupMap.put("no empathy", SymptomGroup.AFFECTIVE_FACTOR);
+        symptomGroupMap.put("no responsibility", SymptomGroup.AFFECTIVE_FACTOR);
+        symptomGroupMap.put("no remorse", SymptomGroup.AFFECTIVE_FACTOR);
+        symptomGroupMap.put("no guilt", SymptomGroup.AFFECTIVE_FACTOR);
+
+        symptomGroupMap.put("grandiosity", SymptomGroup.INTERPERSONAL_FACTOR);
+        symptomGroupMap.put("pathological lying", SymptomGroup.INTERPERSONAL_FACTOR);
+        symptomGroupMap.put("manipulativeness", SymptomGroup.INTERPERSONAL_FACTOR);
+        symptomGroupMap.put("artificial charm", SymptomGroup.INTERPERSONAL_FACTOR);
+
+        symptomGroupMap.put("weak control", SymptomGroup.ANTISOCIAL_FACTOR);
+        symptomGroupMap.put("early behavior problems", SymptomGroup.ANTISOCIAL_FACTOR);
+        symptomGroupMap.put("juvenile delinquency", SymptomGroup.ANTISOCIAL_FACTOR);
+        symptomGroupMap.put("criminal diversity", SymptomGroup.ANTISOCIAL_FACTOR);
+
     }
 
     public SymptomGroup getSymptomGroup(String symptomName) {

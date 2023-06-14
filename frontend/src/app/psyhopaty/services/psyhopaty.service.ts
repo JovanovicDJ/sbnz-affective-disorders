@@ -14,7 +14,7 @@ export class PsyhopatyService {
 
   constructor(private http: HttpClient) {}
 
-  sendSymptoms(symptoms: Array<Object>,patient:Patient) {
-    return this.http.post(`${environment.baseUrl}/${ApiPaths.SYMPTOMS}/${patient.id}`, symptoms);
+  sendSymptoms(symptoms: Array<Object>) {
+    return this.http.post(`${environment.baseUrl}/${ApiPaths.SYMPTOMS}/psycho`, symptoms);
   }
 }

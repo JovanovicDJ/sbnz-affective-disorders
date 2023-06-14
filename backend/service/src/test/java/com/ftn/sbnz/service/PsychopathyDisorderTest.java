@@ -28,7 +28,7 @@ public class PsychopathyDisorderTest {
         Symptom symptom2 = new Symptom("parasitic lifesytle", 5, SymptomGroup.LIFESTYLE_FACTOR, 0);
         Symptom symptom3 = new Symptom("no long-term goals", 4, SymptomGroup.LIFESTYLE_FACTOR, 0);
         Symptom symptom4 = new Symptom("no ambition", 3, SymptomGroup.LIFESTYLE_FACTOR, 0);
-        Symptom symptom5 = new Symptom("impulsiveness", 3, SymptomGroup.LIFESTYLE_FACTOR, 0);
+        Symptom symptom5 = new Symptom("impulsiveness2", 3, SymptomGroup.LIFESTYLE_FACTOR, 0);
         Symptom symptom6 = new Symptom("irresponsibility", 3, SymptomGroup.LIFESTYLE_FACTOR, 0);
 
 
@@ -55,11 +55,11 @@ public class PsychopathyDisorderTest {
 
         kieSession.insert(patient);
 
-        Symptom symptom1 = new Symptom("limited affect", 5, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom2 = new Symptom("no empathy", 5, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom3 = new Symptom("no responsibility", 4, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom4 = new Symptom("no remorse", 3, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom5 = new Symptom("no guilt", 3, SymptomGroup.ANTISOCIAL_FACTOR, 0);
+        Symptom symptom1 = new Symptom("limited affect", 5, SymptomGroup.AFFECTIVE_FACTOR, 0);
+        Symptom symptom2 = new Symptom("no empathy", 5, SymptomGroup.AFFECTIVE_FACTOR, 0);
+        Symptom symptom3 = new Symptom("no responsibility", 4, SymptomGroup.AFFECTIVE_FACTOR, 0);
+        Symptom symptom4 = new Symptom("no remorse", 3, SymptomGroup.AFFECTIVE_FACTOR, 0);
+        Symptom symptom5 = new Symptom("no guilt", 3, SymptomGroup.AFFECTIVE_FACTOR, 0);
 
         kieSession.insert(symptom1);
         kieSession.insert(symptom2);
@@ -83,10 +83,10 @@ public class PsychopathyDisorderTest {
 
         kieSession.insert(patient);
 
-        Symptom symptom1 = new Symptom("grandiosity", 5, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom2 = new Symptom("pathological lying", 5, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom3 = new Symptom("manipulativeness", 4, SymptomGroup.ANTISOCIAL_FACTOR, 0);
-        Symptom symptom4 = new Symptom("artificial charm", 3, SymptomGroup.ANTISOCIAL_FACTOR, 0);
+        Symptom symptom1 = new Symptom("grandiosity", 5, SymptomGroup.INTERPERSONAL_FACTOR, 0);
+        Symptom symptom2 = new Symptom("pathological lying", 5, SymptomGroup.INTERPERSONAL_FACTOR, 0);
+        Symptom symptom3 = new Symptom("manipulativeness", 4, SymptomGroup.INTERPERSONAL_FACTOR, 0);
+        Symptom symptom4 = new Symptom("artificial charm", 3, SymptomGroup.INTERPERSONAL_FACTOR, 0);
 
         kieSession.insert(symptom1);
         kieSession.insert(symptom2);

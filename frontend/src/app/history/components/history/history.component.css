@@ -7,3 +7,9 @@ table{
     justify-content: center;
     align-items: center;
 }
+.disorder-name{
+    
+    border: 3px solid red;
+    border-radius: 9px;
+    padding: 10px;
+}
