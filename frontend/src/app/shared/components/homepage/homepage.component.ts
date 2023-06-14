@@ -58,7 +58,7 @@ export class HomepageComponent implements OnInit {
     this.router.navigateByUrl("doctor/psyhotest")
   }
 
-  openHistoryForPatient(){
-    this.router.navigateByUrl("patient/history")  
+  openHistoryForPatient(patientID:number){
+    this.router.navigateByUrl(`patient/history/${patientID}`);  
   }
 }

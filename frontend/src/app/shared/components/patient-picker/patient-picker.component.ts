@@ -21,7 +21,7 @@ export class PatientPickerComponent implements OnInit {
   }
 
   // form : FormGroup = new FormGroup({
-  //   name: new FormControl(),
+    //   name: new FormControl(),
   //   surname : new FormControl(),
   //   email : new FormControl(),
   //   phoneNum: new FormControl(),
@@ -30,13 +30,19 @@ export class PatientPickerComponent implements OnInit {
   // });
   
   @Input() patients : Patient[] = [];
-
+  @Input() selectedPatientID : number = -1;
+  
   @Output() patientChanged : EventEmitter<Patient> = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  selectPatient(){
+    let toSelect = this.patients.find(p => p.id == this.selectedPatientID);
+    this.selectedPatient = toSelect!;
+    console.log(this.selectedPatient);
+  }
   selectedPatientChanged(){
     // this.form.get('name')?.setValue(this.selectedPatient.name);
     // this.form.get('surname')?.setValue(this.selectedPatient.surname);

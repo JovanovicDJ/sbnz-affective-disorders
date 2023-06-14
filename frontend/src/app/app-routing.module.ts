@@ -12,7 +12,7 @@ const routes: Routes = [
   {path:"doctor/homepage", component:HomepageComponent},
   {path:"doctor/psyhotest", component:PsyhopatyFormComponent},
   { path: "affective-disorders", component: AffectiveDisordersFormComponent },
-  {path:"patient/history", component:HistoryComponent},
+  {path:"patient/history/:id", component:HistoryComponent},
 ];
 
 @NgModule({
