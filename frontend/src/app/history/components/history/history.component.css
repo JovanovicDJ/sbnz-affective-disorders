@@ -1,0 +1,16 @@
+table{
+    width: 50%;
+}
+
+.history{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.disorder-name{
+    
+    border: 3px solid red;
+    border-radius: 9px;
+    padding: 10px;
+}

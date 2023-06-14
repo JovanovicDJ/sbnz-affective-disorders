@@ -1,0 +1,46 @@
+mat-card {
+    max-width: 400px;
+    margin: 15em 20% auto auto;
+    text-align: center;
+  }
+  
+  mat-form-field {
+    display: block;
+  }
+  
+  .left-spacing {
+    margin-left: 5px;
+  }
+  
+  .top-spacing {
+    margin-top: 15px;
+  }
+  
+  .icon-container {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .icon-button {
+    transition: 0.3s;
+  }
+  
+  .icon-button:hover {
+    cursor: pointer;
+    color: white;
+    scale: 1.1;
+    transition: 0.3s;
+  }
+  
+  mat-divider {
+    margin-top: 15px !important;
+    margin-bottom: 15px !important
+  }
+  img{
+    position: fixed;
+    top: 41px;
+    width: 915px;
+    z-index: -10;
+    left: 0;
+    box-shadow: 3px -10px 16px rgb(0 101 178);
+  }

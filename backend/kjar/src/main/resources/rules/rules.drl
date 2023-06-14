@@ -1,0 +1,464 @@
+package rules
+
+import com.ftn.sbnz.model.SymptomGroup;
+import com.ftn.sbnz.model.Symptom;
+import com.ftn.sbnz.model.Patient;
+import com.ftn.sbnz.model.DepressionEvent;
+import com.ftn.sbnz.model.DepressiveEpisode;
+import com.ftn.sbnz.model.ManicEpisode;
+import com.ftn.sbnz.model.DepressionType;
+import com.ftn.sbnz.model.ManiaType;
+import com.ftn.sbnz.model.Gender;
+import com.ftn.sbnz.model.BipolarDisorderType;
+import com.ftn.sbnz.model.BipolarDisorder;
+import com.ftn.sbnz.model.Cyclothymia;
+import com.ftn.sbnz.model.Dysthymia;
+import com.ftn.sbnz.model.RecurrentDepressiveDisorder;
+import com.ftn.sbnz.helpUtil.ValidationUtils;
+import com.ftn.sbnz.helpUtil.RuleUtils;
+
+import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
+import java.time.Instant;
+import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+
+global Boolean maxRuleExecuted;
+
+rule "Check shared depression symptoms if intensity is higher then 45 make DepressionEvent"
+when
+    $patient : Patient($id : id)
+    $s1 : Symptom(name == "low affect", intensity >= 4, patientId == $id)
+    $s2 : Symptom(name == "anhedonia", intensity >= 3, patientId == $id)
+    $s3 : Symptom(name == "hopelessness", intensity >= 4, patientId == $id)
+    $s4 : Symptom(name == "worthlessness", intensity >= 3, patientId == $id)
+    $s5 : Symptom(name == "duration", intensity == 5, patientId == $id)
+    $total : Number(this >= 45) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE, patientId == $id),
+        sum($intensity)
+    )
+then
+    insert(new DepressionEvent($patient, $total.intValue()));
+end
+
+
+rule "Check if depression is with anxious agitation"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, $de.getPatient().getId() == $id)
+    $s1 : Symptom(name == "low concentration",
+                  symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE,
+                  intensity >= 4, patientId == $id)
+    $s2 : Symptom(name == "tension", intensity >= 4, patientId == $id)
+    $s3 : Symptom(name == "unrest", intensity >= 4, patientId == $id)
+    $s4 : Symptom(name == "concern", intensity >= 3, patientId == $id)
+    $total : Number(this > 14) from accumulate(
+            Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_ANXIETY, patientId == $id),
+            sum($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, $patient, $total.intValue() + $de_intensity, false));
+end
+
+
+rule "Check if depression is with melancholic features"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, $de.getPatient().getId() == $id)
+    $s1 : Symptom(name == "disturbed sleep", symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE,
+                  intensity >= 3, patientId == $id)
+    $s2 : Symptom(name == "disturbed appetite", symptomGroup == SymptomGroup.DEPRESSIVE_EPISODE,
+                  intensity >= 3, patientId == $id)
+    $s3 : Symptom(name == "loss of interest", intensity >= 3, patientId == $id)
+    $s4 : Symptom(name == "emptiness", intensity >= 3, patientId == $id)
+    $total : Number(this >= 12) from accumulate(
+                Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_MELANCHOLY, patientId == $id),
+                sum($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_MELANCHOLY, $patient, $total.intValue() + $de_intensity, false));
+end
+
+
+rule "Check if depression is with atypical features"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, $de.getPatient().getId() == $id)
+    $total : Number(this > 12) from accumulate(
+                Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_ATYPICAL_FEATURES,
+                        patientId == $id),
+                sum($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_ATYPICAL_FEATURES, $patient,
+                                 $total.intValue() + $de_intensity, false));
+end
+
+
+rule "Check if depression is with psychotic features"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, $de.getPatient().getId() == $id)
+    $total : Number() from accumulate(
+                    Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_PSYCHOTIC_FEATURES,
+                            patientId == $id),
+                    sum($intensity)
+    )
+    $average : Number(this > 3.8) from accumulate(
+        Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_PSYCHOTIC_FEATURES, patientId == $id),
+        average($intensity)
+    )
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_PSYCHOTIC_FEATURES, $patient,
+                                 $total.intValue() + $de_intensity, false));
+end
+
+
+rule "Check if depression is with paripartum onset (in pragnancy)"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, gender == Gender.FEMALE, $de.getPatient().getId() == $id)
+    $s1 : Symptom(name == "in pregnancy", intensity == 5, patientId == $id)
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5 + $de_intensity, false));
+end
+
+
+rule "Check if depression is with paripartum onset (after pragnancy)"
+when
+    $de : DepressionEvent($de_intensity : intensity)
+    $patient : Patient($id : id, gender == Gender.FEMALE, $de.getPatient().getId() == $id)
+    $s1 : Symptom(name == "after pregnancy", intensity == 5, patientId == $id)
+then
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5 + $de_intensity, false));
+end
+
+
+rule "Choose depression episode with highest intensity"
+when
+    $patient : Patient($id : id)
+    $max : DepressiveEpisode($intensity : intensitySum, accepted == false, patient.getId() == $id)
+    not DepressiveEpisode(intensitySum > $intensity, accepted == false, patient.getId() == $id)
+then
+    if (!maxRuleExecuted) {
+        //modify($max){setAccepted(true)}
+        drools.getKnowledgeRuntime().setGlobal("maxRuleExecuted", true);
+    }
+end
+
+
+rule "Delete DepressiveEpisode with lower intensity"
+when
+    $patient : Patient($id : id)
+    $not_max : DepressiveEpisode($intensity : intensitySum, accepted == false, patient.getId() == $id)
+    DepressiveEpisode(intensitySum > $intensity, accepted == false, patient.getId() == $id)
+then
+    delete($not_max);
+    System.out.println("Deleted " + $not_max.getDepressionType());
+end
+
+
+rule "Check if Manic Episode and Depressive Episode (anxiety) overlap over time window of 2 months"
+when
+    $patient : Patient($id : id)
+    $de : DepressiveEpisode(depressionType == DepressionType.WITH_ANXIETY,
+                            $depression_intensity : intensitySum,
+                            patient.getId() == $id,
+                            $de_executionTime : executionTime)
+    $me : ManicEpisode($mania_intensity : intensitySum,
+                       patient.getId() == $id,
+                       $me_executionTime : executionTime)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
+then
+    delete($de);
+    delete($me);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_ANXIETY, $patient,
+                               $depression_intensity + $mania_intensity, false));
+end
+
+
+rule "Check if Manic Episode and Depressive Episode (melancholy) overlap over time window of 2 months"
+when
+    $patient : Patient($id : id)
+    $de : DepressiveEpisode(depressionType == DepressionType.WITH_MELANCHOLY,
+                            $depression_intensity : intensitySum,
+                            patient.getId() == $id,
+                            $de_executionTime : executionTime)
+    $me : ManicEpisode($mania_intensity : intensitySum,
+                       patient.getId() == $id,
+                       $me_executionTime : executionTime)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
+then
+    delete($de);
+    delete($me);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $patient,
+                               $depression_intensity + $mania_intensity, false));
+end
+
+
+rule "Check if Manic Episode and Depressive Episode (atypical) overlap over time window of 2 months"
+when
+    $patient : Patient($id : id)
+    $de : DepressiveEpisode(depressionType == DepressionType.WITH_ATYPICAL_FEATURES,
+                            $depression_intensity : intensitySum,
+                            patient.getId() == $id,
+                            $de_executionTime : executionTime)
+    $me : ManicEpisode($mania_intensity : intensitySum,
+                       patient.getId() == $id,
+                       $me_executionTime : executionTime)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
+then
+    delete($me);
+    delete($de);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_ATYPICAL_FEATURES, $patient,
+                               $depression_intensity + $mania_intensity, false));
+end
+
+
+rule "Check if Manic Episode and Depressive Episode (psychotic) overlap over time window of 2 months"
+when
+    $patient : Patient($id : id)
+    $de : DepressiveEpisode(depressionType == DepressionType.WITH_PSYCHOTIC_FEATURES,
+                            $depression_intensity : intensitySum,
+                            patient.getId() == $id,
+                            $de_executionTime : executionTime)
+    $me : ManicEpisode($mania_intensity : intensitySum,
+                       patient.getId() == $id,
+                       $me_executionTime : executionTime)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
+then
+    delete($de);
+    delete($me);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_PSYCHOTIC_FEATURES, $patient,
+                               $depression_intensity + $mania_intensity, false));
+end
+
+
+rule "Check if Manic Episode and Depressive Episode (peripartum) overlap over time window of 2 months"
+when
+    $patient : Patient($id : id, gender == Gender.FEMALE)
+    $de : DepressiveEpisode(depressionType == DepressionType.WITH_PERIPARTUM_ONSET,
+                            $depression_intensity : intensitySum,
+                            patient.getId() == $id,
+                            $de_executionTime : executionTime)
+    $me : ManicEpisode($mania_intensity : intensitySum,
+                       patient.getId() == $id,
+                       $me_executionTime : executionTime)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
+then
+    delete($de);
+    delete($me);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_PERIPARTUM_ONSET, $patient,
+                               $depression_intensity + $mania_intensity, false));
+end
+
+
+rule "Check if there are conditions for bipolar disorder with quick change (with manias)"
+when
+    $patient : Patient($id : id)
+    $depression_intensity : Number() from accumulate(
+        DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
+        sum($intensity)
+    )
+    $beList : List(size >= 2) from collect(
+        DepressiveEpisode(patient.getId() == $id)
+    )
+    $mania_intensity : Number() from accumulate(
+        ManicEpisode($intensity : intensitySum, patient.getId() == $id),
+        sum($intensity)
+    )
+    $meList : List(size >= 2) from collect(
+        ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA)
+    )
+    eval(RuleUtils.checkExecutionTimesAfterOneYear($beList, $meList))
+then
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
+                               $depression_intensity.intValue() + $mania_intensity.intValue(), false));
+end
+
+
+rule "Check if there are conditions for bipolar disorder with quick change (mania/hypomania)"
+when
+    $patient : Patient($id : id)
+    $depression_intensity : Number() from accumulate(
+        DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
+        sum($intensity)
+    )
+    $beList : List(size >= 2) from collect(
+        DepressiveEpisode(patient.getId() == $id)
+    )
+    $me : ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA, $mania_intensity : intensitySum)
+    $hme : ManicEpisode(patient.getId() == $id, maniaType == ManiaType.HYPOMANIA, $hypomania_intensity : intensitySum)
+    eval(RuleUtils.checkExecutionTimesForManiaHypomania($beList, $me, $hme))
+then
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
+                               $depression_intensity.intValue() + $mania_intensity + $hypomania_intensity, false));
+end
+
+
+rule "Check if there are conditions for bipolar disorder with quick change (with hypomanias)"
+when
+    $patient : Patient($id : id)
+    $beList : List(size >= 2) from collect(
+        DepressiveEpisode(patient.getId() == $id)
+    )
+    $meList : List(size >= 2) from collect(
+        ManicEpisode(patient.getId() == $id, maniaType == ManiaType.HYPOMANIA))
+    $hypomania_intensity : Number() from accumulate(
+            ManicEpisode($intensity : intensitySum, patient.getId() == $id),
+            sum($intensity))
+    $depression_intensity : Number() from accumulate(
+            DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
+            sum($intensity))
+    eval(RuleUtils.checkExecutionTimesAfterOneYear($beList, $meList))
+then
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
+                               $depression_intensity.intValue() + $hypomania_intensity.intValue(), false));
+end
+
+
+rule "Look for bipolar disorders for last 2y and check period between those is no more than 2m , and create Cyclothymia, old persons"
+when
+    $patient : Patient($id : id, dob < LocalDate.now().minusYears(18))
+    $bdsList : List(size > 4) from collect(
+        BipolarDisorder(
+            patient.getId() == $id,
+            $executionTime : executionTime
+        )
+        over window:time(730d) // Prozor od 2 godine
+    )
+    eval(
+        ValidationUtils.validateCyclothymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySum($bdsList);
+    insert(new Cyclothymia($patient, LocalDate.now(), intensitySum));
+end
+
+
+rule "Look for bipolar disorders for last 1y and check period between those is no more than 2m , and create Cyclothymia, young persons"
+when
+    $patient : Patient($id : id, dob > LocalDate.now().minusYears(18))
+    $bdsList : List(size > 4) from collect(
+        BipolarDisorder(
+            patient.getId() == $id,
+            $executionTime : executionTime
+        )
+        over window:time(365d) // Prozor od 1 godine
+    )
+    eval(
+        ValidationUtils.validateCyclothymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySum($bdsList);
+    insert(new Cyclothymia($patient, LocalDate.now(), intensitySum));
+end
+
+
+rule "Look for depression episodes for last 2y and check period between those is no more than 2m , and create Dysthymia, old persons"
+when
+    $patient : Patient($id : id, dob < LocalDate.now().minusYears(18))
+    $bdsList : List(size > 4) from collect(
+        DepressiveEpisode( patient.getId() == $id )
+        over window:time(730d) // Prozor od 2 godine
+    )
+    eval(
+        ValidationUtils.validateDysthymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySumDysthymia($bdsList);
+    insert(new Dysthymia($patient, LocalDate.now(), intensitySum));
+end
+
+rule "Look for depression episodes for last 1y and check period between those is no more than 2m , and create Cyclothymia, young persons"
+when
+    $patient : Patient($id : id, dob > LocalDate.now().minusYears(18))
+    $bdsList : List(size > 1) from collect(
+        DepressiveEpisode( patient.getId() == $id )
+        over window:time(365d)
+    )
+    eval(
+        ValidationUtils.validateDysthymia($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calculateIntensitySumDysthymia($bdsList);
+    insert(new Dysthymia($patient, LocalDate.now(), intensitySum));
+end
+
+
+rule "Check for recurrent depressive disorder, mote then two episodes of depression in three months"
+when
+    $patient : Patient($id : id)
+    $bdsList : List(size > 2) from collect(
+        DepressiveEpisode( patient.getId() == $id )
+        over window:time(93d)
+    )
+    eval(
+        ValidationUtils.validateRecurrentDepressiveDisorder($bdsList)
+    )
+then
+    int intensitySum = ValidationUtils.calcIntensityRecurrentDisorder($bdsList);
+    insert(new RecurrentDepressiveDisorder($patient, intensitySum, false));
+end
+
+
+rule "Change the diagnosis if manic episode happens in two months after reccurent depressive disorder"
+when
+    $patient : Patient($id : id)
+    $rdd : RecurrentDepressiveDisorder(patient.getId() == $id, $rdd_intensity : intensitySum)
+    $me : ManicEpisode(patient.getId() == $id, $me_intensity : intensitySum, maniaType == ManiaType.MANIA)
+    eval(
+        ValidationUtils.validateDiagnosisChange($rdd, $me)
+    )
+then
+    delete($rdd);
+    delete($me);
+    insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $patient, $rdd_intensity + $me_intensity, false));
+end
+
+//---------------------------------------------------------------------------------------------------
+rule "Bipolar Disorder"
+when
+    $bd : BipolarDisorder()
+then
+    System.out.println("Bipolar Disorder: " + $bd.getBipolarDisorderType());
+end
+
+
+rule "Manic episode and depressive episode and patient"
+when
+    $patient : Patient($id : id)
+    $me : ManicEpisode($meintensity : intensitySum,
+                       $meexecution_time : executionTime,
+                       patient.getId() == $id)
+    $de : DepressiveEpisode($deintensity : intensitySum,
+                            $deexecution_time : executionTime,
+                            patient.getId() == $id)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($deexecution_time, $meexecution_time))
+then
+    System.out.println($deintensity);
+    System.out.println($deexecution_time);
+    System.out.println($meintensity);
+    System.out.println($meexecution_time);
+end
+
+
+rule "Accepted depressive episode"
+when
+    $patient : Patient($id : id)
+    $de : DepressiveEpisode(accepted == true, patient.getId() == $id)
+then
+    System.out.println(maxRuleExecuted);
+    System.out.println($de.getDepressionType());
+    System.out.println($de.getIntensitySum());
+end
+
+
+rule "cyc"
+when
+    $c : Cyclothymia()
+then
+    System.out.println("ide gas evo je!\n");
+end

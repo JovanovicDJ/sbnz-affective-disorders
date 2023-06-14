@@ -1,0 +1,52 @@
+template header
+minSymptomValue
+borderSymptomValue
+hypomaniaBorderValue
+maniaBorderValue
+maxValue
+
+package template
+
+import com.ftn.sbnz.model.Symptom
+import com.ftn.sbnz.model.SymptomGroup
+import com.ftn.sbnz.model.Patient
+import com.ftn.sbnz.model.ManicEpisode
+import com.ftn.sbnz.model.ManiaType
+import java.time.LocalDate
+
+template "manias"
+
+rule "Check if the symptoms are consistent with mania"
+    when
+        $patient : Patient($id : id)
+        $s1 : Symptom(name == "euphoria", intensity >= @{borderSymptomValue}, patientId == $id)
+        $s2 : Symptom(name == "excessive activity", intensity >= @{borderSymptomValue}, patientId == $id)
+        $s3 : Symptom(name == "hyperoptimism", intensity >= @{borderSymptomValue}, patientId == $id)
+        $s4 : Symptom(name == "duration", intensity >= @{minSymptomValue}, patientId == $id)
+        $total : Number(this >= @{maniaBorderValue},
+                        this <= @{maxValue}) from accumulate(
+                            Symptom($intensity : intensity, symptomGroup == SymptomGroup.MANIC_EPISODE, patientId == $id),
+                            sum($intensity)
+            )
+    then
+        insert(new ManicEpisode(ManiaType.MANIA, $patient, $total.intValue(), true));
+end
+
+
+rule "Check if the symptoms are consistent with hypomania"
+    when
+        $patient : Patient($id : id)
+        $s1 : Symptom(name == "euphoria", intensity > @{minSymptomValue}, patientId == $id)
+        $s2 : Symptom(name == "excessive activity", intensity > @{minSymptomValue}, patientId == $id)
+        $s3 : Symptom(name == "hyperoptimism", intensity > @{minSymptomValue}, patientId == $id)
+        $s4 : Symptom(name == "duration", intensity >= @{minSymptomValue}, patientId == $id)
+        $total : Number(this >= @{hypomaniaBorderValue},
+                        this < @{maniaBorderValue}) from accumulate(
+                            Symptom($intensity : intensity, symptomGroup == SymptomGroup.MANIC_EPISODE, patientId == $id),
+                            sum($intensity)
+            )
+    then
+        insert(new ManicEpisode(ManiaType.HYPOMANIA, $patient, $total.intValue(), true));
+end
+
+end template
