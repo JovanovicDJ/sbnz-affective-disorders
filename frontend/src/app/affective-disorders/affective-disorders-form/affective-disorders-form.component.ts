@@ -21,6 +21,7 @@ export class AffectiveDisordersFormComponent implements OnInit {
   patients : Patient[] = [];
 
   patientId: number = -1;
+  showSpiner :boolean = false;
 
   constructor(private affectiveDisordersService: AffectiveDisordersService,
               private messageService: MessageService,
@@ -63,16 +64,19 @@ export class AffectiveDisordersFormComponent implements OnInit {
     if (this.patientId === -1) {
       this.messageService.showMessage('Pacijent nije odabran!', MessageType.WARNING);
     } else {
+      this.showSpiner = true;
       const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity, patientId: this.patientId }));
       this.affectiveDisordersService
         .sendSymptoms(symptomList)
         .subscribe({
-        next: (res: any) => {          
+        next: (res: any) => {   
+          this.showSpiner = false;       
           if (res.message === '') {
             this.messageService.showMessage('Pacijent nema nijedan poremećaj!', MessageType.INFO);
           } else {
             this.messageService.showMessage(res.message, MessageType.SUCCESS);
           }
+          this.router.navigateByUrl("patient/history/"+this.patientId);
         },
         error: (err) => {
           this.messageService.showMessage(err.error.message, MessageType.ERROR);

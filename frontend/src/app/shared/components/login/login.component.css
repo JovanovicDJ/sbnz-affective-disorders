@@ -1,6 +1,6 @@
 mat-card {
     max-width: 400px;
-    margin: 2em auto;
+    margin: 15em 20% auto auto;
     text-align: center;
   }
   
@@ -35,4 +35,12 @@ mat-card {
   mat-divider {
     margin-top: 15px !important;
     margin-bottom: 15px !important
+  }
+  img{
+    position: fixed;
+    top: 41px;
+    width: 915px;
+    z-index: -10;
+    left: 0;
+    box-shadow: 3px -10px 16px rgb(0 101 178);
   }
