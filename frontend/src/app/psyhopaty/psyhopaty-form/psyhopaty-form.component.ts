@@ -48,7 +48,6 @@ export class PsyhopatyFormComponent implements OnInit {
   }
 
   refreshData(){
-
     this.patientService.getPatientsForDoctor(this.userService.loggedUser.id).subscribe(
       data => {
         this.patients = data;

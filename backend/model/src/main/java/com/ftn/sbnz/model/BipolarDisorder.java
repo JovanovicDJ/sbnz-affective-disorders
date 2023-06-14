@@ -10,7 +10,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "dipolar_disorders")
+@Table(name = "bipolar_disorders")
 @Role(Role.Type.EVENT)
 @Timestamp("executionTime")
 @Expires("60d")

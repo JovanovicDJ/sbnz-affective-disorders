@@ -7,12 +7,11 @@ import { AffectiveDisordersFormComponent } from './affective-disorders/affective
 import { HistoryComponent } from './history/components/history/history.component';
 
 const routes: Routes = [
-  {path:"", component:LoginComponent},
-  { path:"psyhopaty" , component: PsyhopatyFormComponent },
-  {path:"doctor/homepage", component:HomepageComponent},
-  {path:"doctor/psyhotest", component:PsyhopatyFormComponent},
-  { path: "affective-disorders", component: AffectiveDisordersFormComponent },
-  {path:"patient/history", component:HistoryComponent},
+  { path:"", component:LoginComponent },
+  { path:"doctor/homepage", component:HomepageComponent },
+  { path:"doctor/psyhotest", component:PsyhopatyFormComponent },
+  { path: "doctor/affective-disorders", component: AffectiveDisordersFormComponent },
+  { path:"patient/history", component:HistoryComponent },
 ];
 
 @NgModule({
