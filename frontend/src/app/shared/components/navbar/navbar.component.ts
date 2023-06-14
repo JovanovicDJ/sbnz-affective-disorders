@@ -25,4 +25,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl('');
 
   }
+  redirectToHome(){
+    this.router.navigateByUrl('doctor/homepage'); 
+  }
 }

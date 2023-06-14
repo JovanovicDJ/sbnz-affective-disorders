@@ -14,6 +14,7 @@ import { MaterialModule } from './shared/material/material.module';
 import { MatSliderModule } from '@angular/material/slider';
 import { PsyhopatyModule } from './psyhopaty/psyhopaty.module';
 import { AffectiveDisordersModule } from './affective-disorders/affective-disorders.module';
+import { HistoryModule } from './history/history.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AffectiveDisordersModule } from './affective-disorders/affective-disord
     FormsModule,
     HttpClientModule,
     PsyhopatyModule,
-    AffectiveDisordersModule
+    AffectiveDisordersModule,
+    HistoryModule
   ],
   providers: [],
   bootstrap: [AppComponent]

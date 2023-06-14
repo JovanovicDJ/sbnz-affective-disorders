@@ -18,13 +18,22 @@ export class PsyhopatyFormComponent implements OnInit {
   step = 0;
 
   form : FormGroup = this.generateFormGroup();
+  patient : Patient ={
+    id: -1,
+    doctorID: 0,
+    name: '',
+    surname: '',
+    email: '',
+    phoneNum: '',
+    dob: '',
+    gender: ''
+  }
 
   patients : Patient[] = [];
   
 
   constructor(
     private psyhopatyService: PsyhopatyService,
-    private affectiveDisordersService:AffectiveDisordersService,
     private messageService:MessageService,
     private userService: LoginService,
     private router : Router,
@@ -62,8 +71,8 @@ export class PsyhopatyFormComponent implements OnInit {
   sendForm() {
     const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity }));
     console.log(symptomList);
-    this.affectiveDisordersService
-      .sendSymptoms(symptomList)
+    this.psyhopatyService
+      .sendSymptoms(symptomList,this.patient)
       .subscribe({
       next: (res: any) => {          
         console.log(res);
@@ -101,4 +110,8 @@ export class PsyhopatyFormComponent implements OnInit {
     });
   }
 
+
+  patientChanged(selectedPatient:Patient){
+    this.patient = selectedPatient;
+  }
 }

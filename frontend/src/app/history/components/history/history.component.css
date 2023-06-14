@@ -1,0 +1,9 @@
+table{
+    width: 50%;
+}
+
+.history{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

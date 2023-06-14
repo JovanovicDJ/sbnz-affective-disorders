@@ -4,6 +4,7 @@ import { PsyhopatyFormComponent } from './psyhopaty/psyhopaty-form/psyhopaty-for
 import { LoginComponent } from './shared/components/login/login.component';
 import { HomepageComponent } from './shared/components/homepage/homepage.component';
 import { AffectiveDisordersFormComponent } from './affective-disorders/affective-disorders-form/affective-disorders-form.component';
+import { HistoryComponent } from './history/components/history/history.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
@@ -11,6 +12,7 @@ const routes: Routes = [
   {path:"doctor/homepage", component:HomepageComponent},
   {path:"doctor/psyhotest", component:PsyhopatyFormComponent},
   { path: "affective-disorders", component: AffectiveDisordersFormComponent },
+  {path:"patient/history", component:HistoryComponent},
 ];
 
 @NgModule({
