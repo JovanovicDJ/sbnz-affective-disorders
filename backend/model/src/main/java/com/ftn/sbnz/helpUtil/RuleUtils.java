@@ -20,7 +20,6 @@ public class RuleUtils {
         int correctDepressions = 0;
         int correctManias = 0;
         for (DepressiveEpisode de : depressions) {
-            System.out.println(de.getDepressionType() + " " + de.getExecutionTime() + " " + de.getIntensitySum());
             Instant now = Instant.now();
             Instant oneYearAgo = now.minus(365, ChronoUnit.DAYS);
             if (de.getExecutionTime().toInstant().isAfter(oneYearAgo)) {
@@ -28,14 +27,13 @@ public class RuleUtils {
             }
         }
         for (ManicEpisode me : manias) {
-            System.out.println(me.getManiaType() + " " + me.getExecutionTime() + " " + me.getIntensitySum());
             Instant now = Instant.now();
             Instant oneYearAgo = now.minus(365, ChronoUnit.DAYS);
             if (me.getExecutionTime().toInstant().isAfter(oneYearAgo)) {
                 correctManias += 1;
             }
         }
-        return correctDepressions > 2 && correctManias > 2;
+        return correctDepressions >= 2 && correctManias >= 2;
     }
 
     public static boolean checkExecutionTimesForManiaHypomania(List<DepressiveEpisode> depressions, ManicEpisode mania, ManicEpisode hypomania) {

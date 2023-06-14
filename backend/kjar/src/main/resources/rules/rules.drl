@@ -54,7 +54,7 @@ when
     $s2 : Symptom(name == "tension", intensity >= 4, patientId == $id)
     $s3 : Symptom(name == "unrest", intensity >= 4, patientId == $id)
     $s4 : Symptom(name == "concern", intensity >= 3, patientId == $id)
-    $total : Number(this > 15) from accumulate(
+    $total : Number(this > 14) from accumulate(
             Symptom($intensity : intensity, symptomGroup == SymptomGroup.DE_WITH_ANXIETY, patientId == $id),
             sum($intensity)
     )
@@ -122,7 +122,7 @@ when
     $patient : Patient($id : id, gender == Gender.FEMALE, $de.getPatient().getId() == $id)
     $s1 : Symptom(name == "in pregnancy", intensity == 5, patientId == $id)
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5 + $de_intensity, false));
 end
 
 
@@ -132,7 +132,7 @@ when
     $patient : Patient($id : id, gender == Gender.FEMALE, $de.getPatient().getId() == $id)
     $s1 : Symptom(name == "after pregnancy", intensity == 5, patientId == $id)
 then
-    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5, false));
+    insert(new DepressiveEpisode(DepressionType.WITH_PERIPARTUM_ONSET, $patient, 5 + $de_intensity, false));
 end
 
 
@@ -236,7 +236,7 @@ then
 end
 
 
-rule "Check if Manic Episode and Depressive Episode (paripartum) overlap over time window of 2 months"
+rule "Check if Manic Episode and Depressive Episode (peripartum) overlap over time window of 2 months"
 when
     $patient : Patient($id : id, gender == Gender.FEMALE)
     $de : DepressiveEpisode(depressionType == DepressionType.WITH_PERIPARTUM_ONSET,
@@ -262,14 +262,14 @@ when
         DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
         sum($intensity)
     )
-    $beList : List(size > 2) from collect(
+    $beList : List(size >= 2) from collect(
         DepressiveEpisode(patient.getId() == $id)
     )
     $mania_intensity : Number() from accumulate(
         ManicEpisode($intensity : intensitySum, patient.getId() == $id),
         sum($intensity)
     )
-    $meList : List(size > 2) from collect(
+    $meList : List(size >= 2) from collect(
         ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA)
     )
     eval(RuleUtils.checkExecutionTimesAfterOneYear($beList, $meList))
@@ -286,7 +286,7 @@ when
         DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
         sum($intensity)
     )
-    $beList : List(size > 2) from collect(
+    $beList : List(size >= 2) from collect(
         DepressiveEpisode(patient.getId() == $id)
     )
     $me : ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA, $mania_intensity : intensitySum)
@@ -301,10 +301,10 @@ end
 rule "Check if there are conditions for bipolar disorder with quick change (with hypomanias)"
 when
     $patient : Patient($id : id)
-    $beList : List(size > 2) from collect(
+    $beList : List(size >= 2) from collect(
         DepressiveEpisode(patient.getId() == $id)
     )
-    $meList : List(size > 2) from collect(
+    $meList : List(size >= 2) from collect(
         ManicEpisode(patient.getId() == $id, maniaType == ManiaType.HYPOMANIA))
     $hypomania_intensity : Number() from accumulate(
             ManicEpisode($intensity : intensitySum, patient.getId() == $id),
@@ -322,7 +322,7 @@ end
 rule "Look for bipolar disorders for last 2y and check period between those is no more than 2m , and create Cyclothymia, old persons"
 when
     $patient : Patient($id : id, dob < LocalDate.now().minusYears(18))
-    $bdsList : List(size > 1) from collect(
+    $bdsList : List(size > 4) from collect(
         BipolarDisorder(
             patient.getId() == $id,
             $executionTime : executionTime
@@ -341,7 +341,7 @@ end
 rule "Look for bipolar disorders for last 1y and check period between those is no more than 2m , and create Cyclothymia, young persons"
 when
     $patient : Patient($id : id, dob > LocalDate.now().minusYears(18))
-    $bdsList : List(size > 1) from collect(
+    $bdsList : List(size > 4) from collect(
         BipolarDisorder(
             patient.getId() == $id,
             $executionTime : executionTime
@@ -357,18 +357,10 @@ then
 end
 
 
-rule "cyc"
-when
-    $c : Cyclothymia()
-then
-    System.out.println("ide gas evo je!\n");
-end
-
-
-rule "Look for depression episodes for last 2y and check period between those is no more than 2m , and create Cyclothymia, old persons"
+rule "Look for depression episodes for last 2y and check period between those is no more than 2m , and create Dysthymia, old persons"
 when
     $patient : Patient($id : id, dob < LocalDate.now().minusYears(18))
-    $bdsList : List(size > 1) from collect(
+    $bdsList : List(size > 4) from collect(
         DepressiveEpisode( patient.getId() == $id )
         over window:time(730d) // Prozor od 2 godine
     )
@@ -396,7 +388,7 @@ then
 end
 
 
-rule "Check for recurrent depressive disorder, at least two episodes of depression in three months"
+rule "Check for recurrent depressive disorder, mote then two episodes of depression in three months"
 when
     $patient : Patient($id : id)
     $bdsList : List(size > 2) from collect(
@@ -416,7 +408,7 @@ rule "Change the diagnosis if manic episode happens in two months after reccuren
 when
     $patient : Patient($id : id)
     $rdd : RecurrentDepressiveDisorder(patient.getId() == $id, $rdd_intensity : intensitySum)
-    $me : ManicEpisode(patient.getId() == $id, $me_intensity : intensitySum)
+    $me : ManicEpisode(patient.getId() == $id, $me_intensity : intensitySum, maniaType == ManiaType.MANIA)
     eval(
         ValidationUtils.validateDiagnosisChange($rdd, $me)
     )
@@ -461,4 +453,12 @@ then
     System.out.println(maxRuleExecuted);
     System.out.println($de.getDepressionType());
     System.out.println($de.getIntensitySum());
+end
+
+
+rule "cyc"
+when
+    $c : Cyclothymia()
+then
+    System.out.println("ide gas evo je!\n");
 end
