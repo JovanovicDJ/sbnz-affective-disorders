@@ -79,6 +79,7 @@ export class AffectiveDisordersFormComponent implements OnInit {
           this.router.navigateByUrl("patient/history/"+this.patientId);
         },
         error: (err) => {
+          this.showSpiner = false;    
           this.messageService.showMessage(err.error.message, MessageType.ERROR);
         }
       });
