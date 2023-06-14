@@ -6,6 +6,7 @@ import org.kie.api.definition.type.Timestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 
 @Entity
@@ -27,7 +28,7 @@ public class BipolarDisorder {
     private Patient patient;
 
     @Column(name = "execution_time",nullable = false)
-    private LocalDate executionTime;
+    private Date executionTime;
 
     @Column(name = "intensity",nullable = false)
     private int intensitySum;
@@ -40,7 +41,7 @@ public class BipolarDisorder {
 
     public BipolarDisorder() { }
 
-    public BipolarDisorder(Long id, BipolarDisorderType bipolarDisorderType, Patient patient, LocalDate executionTime, int intensitySum, boolean accepted) {
+    public BipolarDisorder(Long id, BipolarDisorderType bipolarDisorderType, Patient patient, Date executionTime, int intensitySum, boolean accepted) {
         this.id = id;
         this.bipolarDisorderType = bipolarDisorderType;
         this.patient = patient;
@@ -52,12 +53,12 @@ public class BipolarDisorder {
     public BipolarDisorder(BipolarDisorderType bipolarDisorderType, Patient patient, int intensitySum, boolean accepted) {
         this.bipolarDisorderType = bipolarDisorderType;
         this.patient = patient;
-        this.executionTime = LocalDate.now();
+        this.executionTime = new Date();
         this.intensitySum = intensitySum;
         this.accepted = accepted;
     }
 
-    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, Patient patient, LocalDate executionTime, int intensitySum, boolean accepted) {
+    public BipolarDisorder(BipolarDisorderType bipolarDisorderType, Patient patient, Date executionTime, int intensitySum, boolean accepted) {
         this.bipolarDisorderType = bipolarDisorderType;
         this.patient = patient;
         this.executionTime = executionTime;
@@ -89,11 +90,11 @@ public class BipolarDisorder {
         this.patient = patient;
     }
 
-    public LocalDate getExecutionTime() {
+    public Date getExecutionTime() {
         return executionTime;
     }
 
-    public void setExecutionTime(LocalDate executionTime) {
+    public void setExecutionTime(Date executionTime) {
         this.executionTime = executionTime;
     }
 

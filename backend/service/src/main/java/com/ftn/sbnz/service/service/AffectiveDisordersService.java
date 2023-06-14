@@ -50,7 +50,7 @@ public class AffectiveDisordersService {
     private String findManicEpisode(List<Symptom> symptoms) {
         InputStream template = AffectiveDisordersService.class.getResourceAsStream("/template/template.drt");
         DataProvider dataProvider = new ArrayDataProvider(new String[][]{
-                new String[]{"3", "4", "42", "52", "70"}
+                new String[]{"3", "4", "45", "55", "65"}
         });
 
         DataProviderCompiler converter = new DataProviderCompiler();
@@ -59,14 +59,18 @@ public class AffectiveDisordersService {
         KieHelper kieHelper = new KieHelper();
         kieHelper.addContent(drl, ResourceType.DRL);
         KieSession kieSession = kieHelper.build().newKieSession();
-
+        Patient patient = patientService.findById((long) symptoms.get(0).getPatientId());
+        kieSession.insert(patient);
         for (Symptom s : symptoms) {
             if (s.getSymptomGroup() == SymptomGroup.MANIC_EPISODE) {
+                System.out.println(s.getName() + " " + s.getIntensity());
+                kieSession.insert(s);
+            }
+            else if (s.getName().equals("duration")) {
                 kieSession.insert(s);
             }
         }
-
-        kieSession.insert(patientService.findById((long) symptoms.get(0).getPatientId()));
+        System.out.println("-----------");
         kieSession.fireAllRules();
         Collection<Object> allObjects = (Collection<Object>) kieSession.getObjects();
         kieSession.dispose();
@@ -74,8 +78,6 @@ public class AffectiveDisordersService {
             if (object instanceof ManicEpisode) {
                 ManicEpisode manicEpisode = (ManicEpisode) object;
                 manicEpisodeRepository.save(manicEpisode);
-                System.out.println("Intensity: " + manicEpisode.getIntensitySum());
-                System.out.println("Type: " + manicEpisode.getManiaType());
                 String higherLevelDisorder = findHigherLevelDisorders(manicEpisode);
                 if (higherLevelDisorder.equals("")) {
                     if (manicEpisode.getManiaType() == ManiaType.MANIA) {
@@ -86,7 +88,7 @@ public class AffectiveDisordersService {
                     }
                 }
                 else {
-                    return findHigherLevelDisorders(manicEpisode);
+                    return higherLevelDisorder;
                 }
             }
         }
@@ -101,6 +103,7 @@ public class AffectiveDisordersService {
         for (Symptom s : symptoms) {
             if (s.getSymptomGroup().name().startsWith("DE")) {
                 kieSession.insert(s);
+                System.out.println(s.getName() + " " + s.getIntensity());
             }
         }
 
@@ -169,7 +172,11 @@ public class AffectiveDisordersService {
 
     private String getDisorder(Collection<Object> objects) {
         for (Object object : objects) {
-            if (object instanceof Cyclothymia) {
+            System.out.println("IN FOR!");
+            if (object instanceof DepressionEvent) {
+                System.out.println("DEPRESSION EVENT");
+            }
+            else if (object instanceof Cyclothymia) {
                 Cyclothymia cyclothymia = (Cyclothymia) object;
                 if (!cyclothymia.isAccepted()) {
                     cyclothymia.setAccepted(true);

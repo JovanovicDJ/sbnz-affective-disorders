@@ -250,11 +250,10 @@ public class AffectiveDisordersTests {
         KieServices ks = KieServices.Factory.get();
         KieContainer kc = ks.newKieClasspathContainer();
         KieSessionConfiguration config = KieServices.Factory.get().newKieSessionConfiguration();
-        //config.setOption(ClockTypeOption.get("pseudo"));
         config.setOption(ClockTypeOption.get(ClockType.PSEUDO_CLOCK.getId()));
-        //KieSession kieSession = kc.newKieSession(config);
         KieSession kieSession = kc.newKieSession("affectivedisorders", config);
         SessionPseudoClock clock = kieSession.getSessionClock();
+
         long startTime = System.currentTimeMillis();
         clock.advanceTime(startTime, TimeUnit.MILLISECONDS);
 
@@ -268,6 +267,26 @@ public class AffectiveDisordersTests {
         kieSession.insert(new ManicEpisode(ManiaType.MANIA, patient, 35, true));
         System.out.println(new Date(clock.getCurrentTime()));
 
+
+        kieSession.setGlobal("maxRuleExecuted", false);
+
+        kieSession.fireAllRules();
+        //System.out.println(ruleFireCount);
+        kieSession.setGlobal("maxRuleExecuted", true);
+    }
+
+    @Test
+    public void NewTest() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.newKieClasspathContainer();
+        KieSession kieSession = kc.newKieSession("affectivedisorders");
+
+        Patient patient = new Patient(0,"Mikasa","Mikic", LocalDate.of(2000, 2, 15),
+                Gender.FEMALE,"mika@gmail.com", "0645533665",1L);
+        kieSession.insert(patient);
+
+        kieSession.insert(new DepressiveEpisode(DepressionType.WITH_ANXIETY, patient, 78, false));
+        kieSession.insert(new ManicEpisode(ManiaType.MANIA, patient, 35, true));
 
         kieSession.setGlobal("maxRuleExecuted", false);
 

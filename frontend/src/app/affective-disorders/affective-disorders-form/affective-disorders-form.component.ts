@@ -39,7 +39,11 @@ export class AffectiveDisordersFormComponent implements OnInit {
       .sendSymptoms(symptomList)
       .subscribe({
       next: (res: any) => {          
-        console.log(res);
+        if (res.message === '') {
+          this.messageService.showMessage('Pacijent nema nijedan poremećaj!', MessageType.INFO);
+        } else {
+          this.messageService.showMessage(res.message, MessageType.SUCCESS);
+        }
       },
       error: (err) => {
         this.messageService.showMessage(err.error.message, MessageType.ERROR);

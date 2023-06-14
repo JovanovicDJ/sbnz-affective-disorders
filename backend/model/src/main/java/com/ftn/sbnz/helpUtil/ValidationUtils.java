@@ -6,29 +6,51 @@ import com.ftn.sbnz.model.ManicEpisode;
 import com.ftn.sbnz.model.RecurrentDepressiveDisorder;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
 
 public class ValidationUtils {
 
-    public static boolean validateCyclothymia(List<BipolarDisorder> bdsList) {
+//    public static boolean validateCyclothymia(List<BipolarDisorder> bdsList) {
+//
+//        System.out.println("ovde1");
+//        Collections.sort(bdsList, Comparator.comparing(BipolarDisorder::getExecutionTime));
+//        System.out.println("ovde2");
+//        for (int i = 0; i < bdsList.size() - 1; i++) {
+//            BipolarDisorder current = bdsList.get(i);
+//            BipolarDisorder next = bdsList.get(i + 1);
+//            LocalDate currentExecutionDate = current.getExecutionTime();
+//            LocalDate nextExecutionDate = next.getExecutionTime()
+//            long monthsBetween = ChronoUnit.MONTHS.between(currentExecutionDate, nextExecutionDate);
+//            if (monthsBetween > 2) {
+//                return false; // Ako je razmak između dva susedna poremećaja veći od 2 meseca, ciklotimija nije prisutna
+//            }
+//        }
+//        return true; // Ciklotimija je prisutna
+//    }
 
-        System.out.println("ovde1");
+    public static boolean validateCyclothymia(List<BipolarDisorder> bdsList) {
         Collections.sort(bdsList, Comparator.comparing(BipolarDisorder::getExecutionTime));
-        System.out.println("ovde2");
         for (int i = 0; i < bdsList.size() - 1; i++) {
             BipolarDisorder current = bdsList.get(i);
             BipolarDisorder next = bdsList.get(i + 1);
-            LocalDate currentExecutionDate = current.getExecutionTime();
-            LocalDate nextExecutionDate = next.getExecutionTime();
-            long monthsBetween = ChronoUnit.MONTHS.between(currentExecutionDate, nextExecutionDate);
+            Date currentExecutionDate = current.getExecutionTime();
+            Date nextExecutionDate = next.getExecutionTime();
+
+            long monthsBetween = ChronoUnit.MONTHS.between(
+                    currentExecutionDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    nextExecutionDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            );
+
             if (monthsBetween > 2) {
-                return false; // Ako je razmak između dva susedna poremećaja veći od 2 meseca, ciklotimija nije prisutna
+                return false; // If the gap between two consecutive episodes is more than 2 months, cyclothymia is not present
             }
         }
-        return true; // Ciklotimija je prisutna
+        return true; // Cyclothymia is present
     }
+
 
     public static int calculateIntensitySum(List<BipolarDisorder> bdsList) {
 
