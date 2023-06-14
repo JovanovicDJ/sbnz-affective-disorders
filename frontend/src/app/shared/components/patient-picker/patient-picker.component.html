@@ -1,6 +1,6 @@
 <mat-card>
     <mat-form-field id="patient-picker">
-        <mat-label>Pacijent za kojeg se radi test</mat-label>
+        <mat-label>Odaberite pacijenta...</mat-label>
         <mat-select (selectionChange)="selectedPatientChanged()" [(value)]="selectedPatient">
             <mat-option *ngFor="let p of patients" [value]="p">
             {{p.name}} {{p.surname}} - {{p.email}}

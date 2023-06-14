@@ -1,4 +1,4 @@
-<app-patient-picker [patients]="patients">
+<app-patient-picker [patients]="patients" (patientChanged)="patientChanged($event)">
 
 </app-patient-picker>
 <div class="main">
@@ -397,7 +397,8 @@
                     
                         <mat-action-row>
                             <button mat-button color="warn" (click)="prevStep()">Prethodno</button>
-                            <button mat-raised-button color="primary" (click)="sendForm()">Pošalji</button>
+                            <button mat-raised-button color="primary" (click)="sendForm()" *ngIf="patient.id != -1">Pošalji</button>
+                            <button mat-raised-button color="warn"  *ngIf="patient.id == -1">Selektujte pacijenta da bi poslali simptome</button>
                         </mat-action-row>
                     </mat-expansion-panel>
 

@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-    <span  *ngIf="this.loginService.loggedUser.id != -1">Doktor</span>
+    <span  *ngIf="this.loginService.loggedUser.id != -1" (click)="redirectToHome()" style="cursor: pointer;">Doktor</span>
     <span class="example-spacer"></span>
     <button mat-icon-button class="example-icon"  *ngIf="this.loginService.loggedUser.id != -1" (click)="logout()">
       <mat-icon>logout</mat-icon>

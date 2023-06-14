@@ -44,10 +44,10 @@
       
         <mat-form-field>
             <mat-label>Pol</mat-label>
-            <select matNativeControl required formControlName="gender">
-            <option value="MALE">Muski</option>
-            <option value="FEMALE">Zenski</option>
-            </select>
+            <mat-select matNativeControl required formControlName="gender">
+            <mat-option value="MALE">Muski</mat-option>
+            <mat-option value="FEMALE">Zenski</mat-option>
+            </mat-select>
         </mat-form-field>
     
       <button mat-raised-button colot="primary" (click)="addNewPatient()">

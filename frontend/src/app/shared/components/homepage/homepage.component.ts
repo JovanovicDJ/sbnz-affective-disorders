@@ -20,7 +20,7 @@ export class HomepageComponent implements OnInit {
     'name',
     'surname',
     'email',
-    'phoneNum',
+    'phoneNum'
   ];
 
   constructor(
@@ -56,5 +56,9 @@ export class HomepageComponent implements OnInit {
 
   newPsyhopatyTest(){
     this.router.navigateByUrl("doctor/psyhotest")
+  }
+
+  openHistoryForPatient(){
+    this.router.navigateByUrl("patient/history")  
   }
 }
