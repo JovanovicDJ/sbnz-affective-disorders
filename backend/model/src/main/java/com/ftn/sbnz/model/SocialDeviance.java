@@ -1,18 +1,20 @@
-package com.ftn.sbnz.model2;
-
+package com.ftn.sbnz.model;
 
 import com.ftn.sbnz.model.Patient;
+import org.kie.api.definition.type.Role;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+
 @Entity
-@Table(name = "interpersonal_factors")
-public class InterpersonalFactor {
+@Table(name = "social_deviances")
+@Role(Role.Type.EVENT)
+public class SocialDeviance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "if_id", nullable = false)
+    @Column(name = "sd_id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -25,9 +27,9 @@ public class InterpersonalFactor {
     @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
-    public InterpersonalFactor() { }
+    public SocialDeviance() { }
 
-    public InterpersonalFactor(Patient patient, LocalDate date, int intensitySum) {
+    public SocialDeviance(Patient patient, LocalDate date, int intensitySum) {
         this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;

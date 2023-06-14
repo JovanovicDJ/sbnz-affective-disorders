@@ -1,19 +1,17 @@
-package com.ftn.sbnz.model2;
+package com.ftn.sbnz.model;
 
 import com.ftn.sbnz.model.Patient;
-import org.kie.api.definition.type.Role;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "antisocial_factors")
-@Role(Role.Type.EVENT)
-public class AntisocialFactor {
+@Table(name = "lifestyle_factors")
+public class LifestyleFactor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "asf_id", nullable = false)
+    @Column(name = "lf_id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -26,9 +24,9 @@ public class AntisocialFactor {
     @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
-    public AntisocialFactor() { }
+    public LifestyleFactor() { }
 
-    public AntisocialFactor(Patient patient, LocalDate date, int intensitySum) {
+    public LifestyleFactor(Patient patient, LocalDate date, int intensitySum) {
         this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;
@@ -68,7 +66,7 @@ public class AntisocialFactor {
 
     @Override
     public String toString() {
-        return "AntisocialFactor{" +
+        return "LifestyleFactor{" +
                 "id=" + id +
                 ", patientId=" + patient.getId() +
                 ", date=" + date +

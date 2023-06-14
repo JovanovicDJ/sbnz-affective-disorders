@@ -3,13 +3,13 @@ package psychopathyRules
 import com.ftn.sbnz.model.SymptomGroup;
 import com.ftn.sbnz.model.Symptom;
 import com.ftn.sbnz.model.Patient;
-import com.ftn.sbnz.model2.AffectiveFactor;
-import com.ftn.sbnz.model2.AntisocialFactor;
-import com.ftn.sbnz.model2.InterpersonalAffectiveFactor;
-import com.ftn.sbnz.model2.InterpersonalFactor;
-import com.ftn.sbnz.model2.LifestyleFactor;
-import com.ftn.sbnz.model2.Psychopathy;
-import com.ftn.sbnz.model2.SocialDeviance;
+import com.ftn.sbnz.model.AffectiveFactor;
+import com.ftn.sbnz.model.AntisocialFactor;
+import com.ftn.sbnz.model.InterpersonalAffectiveFactor;
+import com.ftn.sbnz.model.InterpersonalFactor;
+import com.ftn.sbnz.model.LifestyleFactor;
+import com.ftn.sbnz.model.Psychopathy;
+import com.ftn.sbnz.model.SocialDeviance;
 
 import java.time.LocalDate;
 
@@ -125,7 +125,7 @@ rule "Check if social deviance and interpersonal affect factor overlap over time
 when
     $patient : Patient($id : id)
     $scd : SocialDeviance(patient.getId() == $id, $scd_intensity: intensitySum)
-    $iaf : InterpersonalAffectiveFactor(patient.getId() == $id == $id , $iaf_intensity: intensitySum)
+    $iaf : InterpersonalAffectiveFactor(patient.getId() == $id , $iaf_intensity: intensitySum)
     over window : time(60d)
 then
     insert(new InterpersonalAffectiveFactor($patient, LocalDate.now(), $scd_intensity + $iaf_intensity ) );

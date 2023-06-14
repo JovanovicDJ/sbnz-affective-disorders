@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model2;
+package com.ftn.sbnz.model;
 
 import com.ftn.sbnz.model.Patient;
 import org.kie.api.definition.type.Role;
@@ -8,13 +8,13 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "interpersonal_affective_factors")
+@Table(name = "affective_factors")
 @Role(Role.Type.EVENT)
-public class InterpersonalAffectiveFactor {
+public class AffectiveFactor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iaf_id", nullable = false)
+    @Column(name = "aff_id", nullable = false)
     private Long id;
 
     @ManyToOne
@@ -27,9 +27,9 @@ public class InterpersonalAffectiveFactor {
     @Column(name = "intensity", nullable = false)
     private int intensitySum;
 
-    public InterpersonalAffectiveFactor() { }
+    public AffectiveFactor() { }
 
-    public InterpersonalAffectiveFactor(Patient patient, LocalDate date, int intensitySum) {
+    public AffectiveFactor(Patient patient, LocalDate date, int intensitySum) {
         this.patient = patient;
         this.date = date;
         this.intensitySum = intensitySum;

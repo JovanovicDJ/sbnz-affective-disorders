@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model2;
+package com.ftn.sbnz.model;
 
 import com.ftn.sbnz.model.Patient;
 
