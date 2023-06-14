@@ -149,17 +149,6 @@ then
 end
 
 
-rule "Accepted depressive episode"
-when
-    $patient : Patient($id : id)
-    $de : DepressiveEpisode(accepted == true, patient.getId() == $id)
-then
-    System.out.println(maxRuleExecuted);
-    System.out.println($de.getDepressionType());
-    System.out.println($de.getIntensitySum());
-end
-
-
 rule "Delete DepressiveEpisode with lower intensity"
 when
     $patient : Patient($id : id)
@@ -168,24 +157,6 @@ when
 then
     delete($not_max);
     System.out.println("Deleted " + $not_max.getDepressionType());
-end
-
-
-rule "Manic episode and depressive episode and patient"
-when
-    $patient : Patient($id : id)
-    $me : ManicEpisode($meintensity : intensitySum,
-                       $meexecution_time : executionTime,
-                       patient.getId() == $id)
-    $de : DepressiveEpisode($deintensity : intensitySum,
-                            $deexecution_time : executionTime,
-                            patient.getId() == $id)
-    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($deexecution_time, $meexecution_time))
-then
-    System.out.println($deintensity);
-    System.out.println($deexecution_time);
-    System.out.println($meintensity);
-    System.out.println($meexecution_time);
 end
 
 
@@ -258,6 +229,8 @@ when
                        $me_executionTime : executionTime)
     eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
 then
+    delete($de);
+    delete($me);
     insert(new BipolarDisorder(BipolarDisorderType.WITH_PSYCHOTIC_FEATURES, $patient,
                                $depression_intensity + $mania_intensity, false));
 end
@@ -275,6 +248,8 @@ when
                        $me_executionTime : executionTime)
     eval(RuleUtils.checkExecutionTimesAfterSixtyDays($de_executionTime, $me_executionTime))
 then
+    delete($de);
+    delete($me);
     insert(new BipolarDisorder(BipolarDisorderType.WITH_PERIPARTUM_ONSET, $patient,
                                $depression_intensity + $mania_intensity, false));
 end
@@ -297,7 +272,7 @@ when
     $meList : List(size > 2) from collect(
         ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA)
     )
-    over window : time(365d)
+    eval(RuleUtils.checkExecutionTimesAfterOneYear($beList, $meList))
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
                                $depression_intensity.intValue() + $mania_intensity.intValue(), false));
@@ -316,7 +291,7 @@ when
     )
     $me : ManicEpisode(patient.getId() == $id, maniaType == ManiaType.MANIA, $mania_intensity : intensitySum)
     $hme : ManicEpisode(patient.getId() == $id, maniaType == ManiaType.HYPOMANIA, $hypomania_intensity : intensitySum)
-    over window : time(365d)
+    eval(RuleUtils.checkExecutionTimesForManiaHypomania($beList, $me, $hme))
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
                                $depression_intensity.intValue() + $mania_intensity + $hypomania_intensity, false));
@@ -337,26 +312,10 @@ when
     $depression_intensity : Number() from accumulate(
             DepressiveEpisode($intensity : intensitySum, patient.getId() == $id),
             sum($intensity))
+    eval(RuleUtils.checkExecutionTimesAfterOneYear($beList, $meList))
 then
     insert(new BipolarDisorder(BipolarDisorderType.WITH_QUICK_CHANGE, $patient,
                                $depression_intensity.intValue() + $hypomania_intensity.intValue(), false));
-end
-
-
-//rule "Check if Manic Episode and Depressive Episode overlap over duration of 2 months"
-//when
-//    $de : DepressiveEpisode()
-//    $me : ManicEpisode(this overlaps[60d] $de)
-//then
-//    System.out.println("Overlaps " + DepressionType.valueOf(String.valueOf(DepressionType.WITH_ANXIETY)));
-//end
-
-
-rule "Bipolar Disorder"
-when
-    $bd : BipolarDisorder()
-then
-    System.out.println("Bipolar Disorder: " + $bd.getBipolarDisorderType());
 end
 
 
@@ -465,4 +424,41 @@ then
     delete($rdd);
     delete($me);
     insert(new BipolarDisorder(BipolarDisorderType.WITH_MELANCHOLY, $patient, $rdd_intensity + $me_intensity, false));
+end
+
+//---------------------------------------------------------------------------------------------------
+rule "Bipolar Disorder"
+when
+    $bd : BipolarDisorder()
+then
+    System.out.println("Bipolar Disorder: " + $bd.getBipolarDisorderType());
+end
+
+
+rule "Manic episode and depressive episode and patient"
+when
+    $patient : Patient($id : id)
+    $me : ManicEpisode($meintensity : intensitySum,
+                       $meexecution_time : executionTime,
+                       patient.getId() == $id)
+    $de : DepressiveEpisode($deintensity : intensitySum,
+                            $deexecution_time : executionTime,
+                            patient.getId() == $id)
+    eval(RuleUtils.checkExecutionTimesAfterSixtyDays($deexecution_time, $meexecution_time))
+then
+    System.out.println($deintensity);
+    System.out.println($deexecution_time);
+    System.out.println($meintensity);
+    System.out.println($meexecution_time);
+end
+
+
+rule "Accepted depressive episode"
+when
+    $patient : Patient($id : id)
+    $de : DepressiveEpisode(accepted == true, patient.getId() == $id)
+then
+    System.out.println(maxRuleExecuted);
+    System.out.println($de.getDepressionType());
+    System.out.println($de.getIntensitySum());
 end

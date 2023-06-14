@@ -3,6 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { generate } from 'rxjs';
 import { AffectiveDisordersService } from '../services/affective-disorders.service';
 import { MessageService, MessageType } from 'src/app/shared/services/message-service/message.service';
+import { LoginService } from 'src/app/shared/services/login-service/login.service';
+import { Router } from '@angular/router';
+import { PatientService } from 'src/app/shared/services/patient-service/patient.service';
+import { Patient } from 'src/app/shared/dto/Patient';
 
 @Component({
   selector: 'app-affective-disorders-form',
@@ -14,10 +18,29 @@ export class AffectiveDisordersFormComponent implements OnInit {
 
   form : FormGroup = this.generateFormGroup();
 
+  patients : Patient[] = [];
+
+  patientId: number = -1;
+
   constructor(private affectiveDisordersService: AffectiveDisordersService,
-              private messageService: MessageService) { }
+              private messageService: MessageService,
+              private userService: LoginService,
+              private router: Router,
+              private patientService: PatientService) { }
 
   ngOnInit(): void {
+    if(this.userService.loggedUser.id == -1){
+      this.router.navigateByUrl("");
+    }
+    this.refreshData();
+  }
+
+  refreshData(){
+    this.patientService.getPatientsForDoctor(this.userService.loggedUser.id).subscribe(
+      data => {
+        this.patients = data;
+      }
+    )
   }
 
   setStep(index: number) {
@@ -32,23 +55,30 @@ export class AffectiveDisordersFormComponent implements OnInit {
     this.step--;
   }
 
+  patientChanged(selectedPatient: Patient) {
+    this.patientId = selectedPatient.id;
+  }
+
   sendForm() {
-    const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity, patientId: 1 }));
-    //console.log(symptomList);
-    this.affectiveDisordersService
-      .sendSymptoms(symptomList)
-      .subscribe({
-      next: (res: any) => {          
-        if (res.message === '') {
-          this.messageService.showMessage('Pacijent nema nijedan poremećaj!', MessageType.INFO);
-        } else {
-          this.messageService.showMessage(res.message, MessageType.SUCCESS);
+    if (this.patientId === -1) {
+      this.messageService.showMessage('Pacijent nije odabran!', MessageType.WARNING);
+    } else {
+      const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity, patientId: this.patientId }));
+      this.affectiveDisordersService
+        .sendSymptoms(symptomList)
+        .subscribe({
+        next: (res: any) => {          
+          if (res.message === '') {
+            this.messageService.showMessage('Pacijent nema nijedan poremećaj!', MessageType.INFO);
+          } else {
+            this.messageService.showMessage(res.message, MessageType.SUCCESS);
+          }
+        },
+        error: (err) => {
+          this.messageService.showMessage(err.error.message, MessageType.ERROR);
         }
-      },
-      error: (err) => {
-        this.messageService.showMessage(err.error.message, MessageType.ERROR);
-      }
-    });
+      });
+    }
   }
 
   generateFormGroup(): FormGroup {
