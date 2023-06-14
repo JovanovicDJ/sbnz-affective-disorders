@@ -14,23 +14,26 @@ public class Patient {
     @Column(name = "doctor_id", nullable = false)
     private Long doctorID;
 
-    @Column(name ="name",nullable = false)
+    @Column(name = "name",nullable = false)
     private String name;
 
-    @Column(name ="surname",nullable = false)
+    @Column(name = "surname",nullable = false)
     private String surname;
 
-    @Column(name ="dob",nullable = false)
+    @Column(name = "dob",nullable = false)
     private LocalDate dob;
 
-    @Column(name ="gender",nullable = false)
+    @Column(name = "gender",nullable = false)
     private Gender gender;
 
-    @Column(name ="email",nullable = false)
+    @Column(name = "email",nullable = false)
     private String email;
 
-    @Column(name ="phone",nullable = false)
+    @Column(name = "phone",nullable = false)
     private String phoneNum;
+
+    @Column(name = "diagnosis")
+    private String diagnosis;
 
     public Patient() { }
 
@@ -107,5 +110,13 @@ public class Patient {
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
     }
 }

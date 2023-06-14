@@ -33,8 +33,8 @@ export class AffectiveDisordersFormComponent implements OnInit {
   }
 
   sendForm() {
-    const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity }));
-    console.log(symptomList);
+    const symptomList = Object.entries(this.form.getRawValue()).map(([name, intensity]) => ({ name, intensity, patientId: 1 }));
+    //console.log(symptomList);
     this.affectiveDisordersService
       .sendSymptoms(symptomList)
       .subscribe({

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -15,12 +16,13 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     public Patient findByEmail(String email) {
-        return this.patientRepository.findByEmail(email);
+        return patientRepository.findByEmail(email);
     }
 
     public List<Patient> findByDoctorID(Long doctorID){
         return this.patientRepository.findByDoctorID(doctorID);
     }
+
     public Patient save(PatientDTO patientDTO) {
         Patient patient = new Patient();
 
@@ -33,5 +35,14 @@ public class PatientService {
         patient.setDoctorID(patientDTO.getDoctorID());
 
         return patientRepository.save(patient);
+    }
+
+    public Patient findById(Long id) {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isPresent()) {
+            return patient.get();
+        } else {
+            return null;
+        }
     }
 }
